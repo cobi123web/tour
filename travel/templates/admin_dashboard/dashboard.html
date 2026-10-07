@@ -1,0 +1,796 @@
+{% extends "admin_dashboard/admin_base.html" %}
+
+{% block title %}Dashboard | Wanderwell{% endblock %}
+
+{% block overview_active %}active{% endblock %}
+
+{% block page_heading %}Overview{% endblock %}
+
+{% block content %}
+
+<!-- =====================================================
+     PAGE HEADER
+     ===================================================== -->
+
+<div class="admin-page-header">
+
+    <div>
+        <h1>Welcome back, {{ request.user.username }}</h1>
+
+        <p>
+            Here's what's happening with Wanderwell today.
+        </p>
+    </div>
+
+    <div class="dashboard-header-actions">
+
+        <a
+            href="{% url 'admin_planning' %}"
+            class="admin-button admin-button-primary"
+        >
+            <i class="bi bi-map"></i>
+            Planning Enquiries
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     MAIN STATISTICS
+     ===================================================== -->
+
+<div class="dashboard-stat-grid">
+
+    <!-- Total enquiries -->
+
+    <div class="dashboard-stat-card">
+
+        <div class="dashboard-stat-top">
+
+            <div>
+                <span class="dashboard-stat-label">
+                    Total Enquiries
+                </span>
+
+                <strong class="dashboard-stat-number">
+                    {{ planning_count }}
+                </strong>
+            </div>
+
+            <div class="dashboard-stat-icon planning">
+                <i class="bi bi-map"></i>
+            </div>
+
+        </div>
+
+        <a
+            href="{% url 'admin_planning' %}"
+            class="dashboard-stat-link"
+        >
+            View enquiries
+            <i class="bi bi-arrow-right"></i>
+        </a>
+
+    </div>
+
+
+    <!-- New enquiries -->
+
+    <div class="dashboard-stat-card">
+
+        <div class="dashboard-stat-top">
+
+            <div>
+                <span class="dashboard-stat-label">
+                    New Enquiries
+                </span>
+
+                <strong class="dashboard-stat-number">
+                    {{ new_enquiries_count }}
+                </strong>
+            </div>
+
+            <div class="dashboard-stat-icon pending">
+                <i class="bi bi-bell"></i>
+            </div>
+
+        </div>
+
+        <a
+            href="{% url 'admin_planning' %}?status=new"
+            class="dashboard-stat-link"
+        >
+            Review new
+            <i class="bi bi-arrow-right"></i>
+        </a>
+
+    </div>
+
+
+    <!-- Completed -->
+
+    <div class="dashboard-stat-card">
+
+        <div class="dashboard-stat-top">
+
+            <div>
+                <span class="dashboard-stat-label">
+                    Completed
+                </span>
+
+                <strong class="dashboard-stat-number">
+                    {{ completed_enquiries_count }}
+                </strong>
+            </div>
+
+            <div class="dashboard-stat-icon published">
+                <i class="bi bi-check-circle"></i>
+            </div>
+
+        </div>
+
+        <a
+            href="{% url 'admin_planning' %}?status=completed"
+            class="dashboard-stat-link"
+        >
+            View completed
+            <i class="bi bi-arrow-right"></i>
+        </a>
+
+    </div>
+
+
+    <!-- Reviews -->
+
+    <div class="dashboard-stat-card">
+
+        <div class="dashboard-stat-top">
+
+            <div>
+                <span class="dashboard-stat-label">
+                    Pending Reviews
+                </span>
+
+                <strong class="dashboard-stat-number">
+                    {{ pending_reviews_count }}
+                </strong>
+            </div>
+
+            <div class="dashboard-stat-icon">
+                <i class="bi bi-chat-square-quote"></i>
+            </div>
+
+        </div>
+
+        <a
+            href="{% url 'admin_reviews' %}?status=pending"
+            class="dashboard-stat-link"
+        >
+            Review submissions
+            <i class="bi bi-arrow-right"></i>
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     QUICK ACTIONS
+     ===================================================== -->
+
+<div class="admin-card dashboard-quick-actions">
+
+    <div class="admin-card-header">
+
+        <div>
+            <h2 class="admin-card-title">
+                Quick Actions
+            </h2>
+
+            <p class="admin-card-subtitle">
+                Manage the most important areas of your website.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="admin-card-body">
+
+        <div class="dashboard-action-grid">
+
+            <a
+                href="{% url 'admin_planning' %}"
+                class="dashboard-action-card"
+            >
+                <div class="dashboard-action-icon planning">
+                    <i class="bi bi-map"></i>
+                </div>
+
+                <div>
+                    <strong>Planning Enquiries</strong>
+                    <span>Manage customer trip requests</span>
+                </div>
+
+                <i class="bi bi-chevron-right dashboard-action-arrow"></i>
+            </a>
+
+
+            <a
+                href="{% url 'admin_reviews' %}"
+                class="dashboard-action-card"
+            >
+                <div class="dashboard-action-icon reviews">
+                    <i class="bi bi-chat-square-quote"></i>
+                </div>
+
+                <div>
+                    <strong>Customer Reviews</strong>
+                    <span>Approve and manage reviews</span>
+                </div>
+
+                <i class="bi bi-chevron-right dashboard-action-arrow"></i>
+            </a>
+
+
+            <a
+                href="{% url 'admin_analytics' %}"
+                class="dashboard-action-card"
+            >
+                <div class="dashboard-action-icon analytics">
+                    <i class="bi bi-bar-chart-line"></i>
+                </div>
+
+                <div>
+                    <strong>Analytics</strong>
+                    <span>View customer and enquiry insights</span>
+                </div>
+
+                <i class="bi bi-chevron-right dashboard-action-arrow"></i>
+            </a>
+
+
+            <a
+                href="{% url 'index' %}"
+                target="_blank"
+                class="dashboard-action-card"
+            >
+                <div class="dashboard-action-icon website">
+                    <i class="bi bi-globe2"></i>
+                </div>
+
+                <div>
+                    <strong>View Website</strong>
+                    <span>Open the public Wanderwell website</span>
+                </div>
+
+                <i class="bi bi-box-arrow-up-right dashboard-action-arrow"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =====================================================
+     NEEDS ATTENTION
+     ===================================================== -->
+
+<div class="admin-card dashboard-attention-card">
+
+    <div class="admin-card-header">
+
+        <div>
+            <h2 class="admin-card-title">
+                Needs Attention
+            </h2>
+
+            <p class="admin-card-subtitle">
+                Items that may require your attention.
+            </p>
+        </div>
+
+        {% if attention_enquiries or attention_reviews %}
+
+            <span class="dashboard-attention-count">
+                {{ new_enquiries_count|add:pending_reviews_count }}
+                pending
+            </span>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="admin-card-body">
+
+        {% if attention_enquiries or attention_reviews %}
+
+            <div class="dashboard-attention-list">
+
+
+                <!-- NEW ENQUIRIES -->
+
+                {% for enquiry in attention_enquiries %}
+
+                    <div class="dashboard-attention-item">
+
+                        <div class="dashboard-attention-icon enquiry">
+                            <i class="bi bi-map"></i>
+                        </div>
+
+                        <div class="dashboard-attention-content">
+
+                            <strong>
+                                New planning enquiry
+                            </strong>
+
+                            <span>
+                                {{ enquiry.name }}
+
+                                {% if enquiry.destination %}
+                                    · {{ enquiry.destination }}
+                                {% endif %}
+                            </span>
+
+                            <small>
+                                {{ enquiry.created_at|date:"M d, Y · g:i A" }}
+                            </small>
+
+                        </div>
+
+                        <a
+                            href="{% url 'admin_planning_detail' enquiry.id %}"
+                            class="dashboard-attention-button"
+                        >
+                            View
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+
+                <!-- PENDING REVIEWS -->
+
+                {% for review in attention_reviews %}
+
+                    <div class="dashboard-attention-item">
+
+                        <div class="dashboard-attention-icon review">
+                            <i class="bi bi-chat-square-quote"></i>
+                        </div>
+
+                        <div class="dashboard-attention-content">
+
+                            <strong>
+                                Review awaiting approval
+                            </strong>
+
+                            <span>
+                                {{ review.name }}
+                            </span>
+
+                            <small>
+                                {{ review.created_at|date:"M d, Y · g:i A" }}
+                            </small>
+
+                        </div>
+
+                        <a
+                            href="{% url 'admin_reviews' %}?status=pending"
+                            class="dashboard-attention-button"
+                        >
+                            Review
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="dashboard-all-clear">
+
+                <div class="dashboard-all-clear-icon">
+                    <i class="bi bi-check2-circle"></i>
+                </div>
+
+                <div>
+                    <strong>
+                        You're all caught up
+                    </strong>
+
+                    <span>
+                        There are no new enquiries or pending reviews.
+                    </span>
+                </div>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     RECENT ACTIVITY
+     ===================================================== -->
+
+<div class="dashboard-two-column">
+
+
+    <!-- Recent planning enquiries -->
+
+    <div class="admin-card">
+
+        <div class="admin-card-header">
+
+            <div>
+                <h2 class="admin-card-title">
+                    Recent Planning Enquiries
+                </h2>
+
+                <p class="admin-card-subtitle">
+                    The latest customer trip requests.
+                </p>
+            </div>
+
+            <a
+                href="{% url 'admin_planning' %}"
+                class="admin-button admin-button-secondary"
+            >
+                View All
+            </a>
+
+        </div>
+
+        <div class="admin-card-body dashboard-recent-body">
+
+            {% if recent_enquiries %}
+
+                <div class="dashboard-recent-list">
+
+                    {% for enquiry in recent_enquiries %}
+
+                        <a
+                            href="{% url 'admin_planning_detail' enquiry.id %}"
+                            class="dashboard-recent-item"
+                        >
+
+                            <div class="dashboard-recent-avatar">
+                                {{ enquiry.name|first|upper }}
+                            </div>
+
+                            <div class="dashboard-recent-info">
+
+                                <strong>
+                                    {{ enquiry.name }}
+                                </strong>
+
+                                <span>
+                                    {% if enquiry.destination %}
+                                        {{ enquiry.destination }}
+                                    {% else %}
+                                        Trip planning enquiry
+                                    {% endif %}
+                                </span>
+
+                            </div>
+
+                            <div class="dashboard-recent-meta">
+
+                                <span class="planning-status planning-status-{{ enquiry.status }}">
+                                    {{ enquiry.get_status_display }}
+                                </span>
+
+                                <small>
+                                    {{ enquiry.created_at|date:"M d, Y" }}
+                                </small>
+
+                            </div>
+
+                        </a>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="admin-empty-state">
+
+                    <div class="admin-empty-icon">
+                        <i class="bi bi-map"></i>
+                    </div>
+
+                    <h3>No enquiries yet</h3>
+
+                    <p>
+                        Customer planning enquiries will appear here.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- Recent reviews -->
+
+    <div class="admin-card">
+
+        <div class="admin-card-header">
+
+            <div>
+                <h2 class="admin-card-title">
+                    Recent Reviews
+                </h2>
+
+                <p class="admin-card-subtitle">
+                    Latest customer feedback.
+                </p>
+            </div>
+
+            <a
+                href="{% url 'admin_reviews' %}"
+                class="admin-button admin-button-secondary"
+            >
+                View All
+            </a>
+
+        </div>
+
+        <div class="admin-card-body dashboard-recent-body">
+
+            {% if recent_reviews %}
+
+                <div class="dashboard-review-list">
+
+                    {% for review in recent_reviews %}
+
+                        <div class="dashboard-review-item">
+
+                            <div class="dashboard-review-avatar">
+                                {{ review.initials }}
+                            </div>
+
+                            <div class="dashboard-review-info">
+
+                                <div class="dashboard-review-heading">
+
+                                    <strong>
+                                        {{ review.name }}
+                                    </strong>
+
+                                    {% if review.is_published %}
+
+                                        <span class="dashboard-review-status published">
+                                            Published
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="dashboard-review-status pending">
+                                            Pending
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                                <div class="dashboard-review-stars">
+
+                                    {% for star in review.stars_filled %}
+                                        <i class="bi bi-star-fill"></i>
+                                    {% endfor %}
+
+                                    {% for star in review.stars_empty %}
+                                        <i class="bi bi-star"></i>
+                                    {% endfor %}
+
+                                </div>
+
+                                <p>
+                                    {{ review.quote|truncatechars:100 }}
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="admin-empty-state">
+
+                    <div class="admin-empty-icon">
+                        <i class="bi bi-chat-square-quote"></i>
+                    </div>
+
+                    <h3>No reviews yet</h3>
+
+                    <p>
+                        Customer reviews will appear here.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ENQUIRY PROGRESS
+     ===================================================== -->
+
+<div class="admin-card dashboard-progress-card">
+
+    <div class="admin-card-header">
+
+        <div>
+            <h2 class="admin-card-title">
+                Enquiry Progress
+            </h2>
+
+            <p class="admin-card-subtitle">
+                Current status of your planning enquiries.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'admin_analytics' %}"
+            class="admin-button admin-button-secondary"
+        >
+            View Analytics
+        </a>
+
+    </div>
+
+    <div class="admin-card-body">
+
+        {% if planning_count %}
+
+            <div class="dashboard-progress-grid">
+
+                <div class="dashboard-progress-item">
+
+                    <div class="dashboard-progress-top">
+                        <span>New</span>
+                        <strong>
+                            {{ new_enquiries_count }}
+                        </strong>
+                    </div>
+
+                    <div class="dashboard-progress-track">
+                        <div
+                            class="dashboard-progress-fill new"
+                            data-count="{{ new_enquiries_count }}"
+                            data-total="{{ planning_count }}"
+                        ></div>
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-progress-item">
+
+                    <div class="dashboard-progress-top">
+                        <span>Contacted</span>
+                        <strong>
+                            {{ contacted_enquiries_count }}
+                        </strong>
+                    </div>
+
+                    <div class="dashboard-progress-track">
+                        <div
+                            class="dashboard-progress-fill contacted"
+                            data-count="{{ contacted_enquiries_count }}"
+                            data-total="{{ planning_count }}"
+                        ></div>
+                    </div>
+
+                </div>
+
+
+                <div class="dashboard-progress-item">
+
+                    <div class="dashboard-progress-top">
+                        <span>Completed</span>
+                        <strong>
+                            {{ completed_enquiries_count }}
+                        </strong>
+                    </div>
+
+                    <div class="dashboard-progress-track">
+                        <div
+                            class="dashboard-progress-fill completed"
+                            data-count="{{ completed_enquiries_count }}"
+                            data-total="{{ planning_count }}"
+                        ></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <div class="admin-empty-state">
+
+                <div class="admin-empty-icon">
+                    <i class="bi bi-bar-chart"></i>
+                </div>
+
+                <h3>No enquiry data yet</h3>
+
+                <p>
+                    Progress information will appear when customers
+                    submit planning enquiries.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const progressBars =
+        document.querySelectorAll(
+            ".dashboard-progress-fill"
+        );
+
+    progressBars.forEach(function (bar) {
+
+        const count =
+            Number(bar.dataset.count) || 0;
+
+        const total =
+            Number(bar.dataset.total) || 0;
+
+        let percentage = 0;
+
+        if (total > 0) {
+            percentage =
+                (count / total) * 100;
+        }
+
+        bar.style.width =
+            percentage + "%";
+    });
+
+});
+</script>
+
+{% endblock %}

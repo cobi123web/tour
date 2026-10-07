@@ -1,0 +1,309 @@
+{% extends "admin_dashboard/admin_base.html" %}
+
+{% block title %}
+    Settings — Wanderwell Admin
+{% endblock %}
+
+{% block settings_active %}
+    active
+{% endblock %}
+
+{% block page_heading %}
+    Settings
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-page-header">
+
+    <div>
+
+        <h1 class="admin-page-title">
+            Website Settings
+        </h1>
+
+        <p class="admin-page-subtitle">
+            Manage Wanderwell's business and contact information.
+        </p>
+
+    </div>
+
+</div>
+
+
+<form method="post">
+
+    {% csrf_token %}
+
+
+    <!-- BUSINESS INFORMATION -->
+
+    <div class="settings-card">
+
+        <div class="settings-card-header">
+
+            <div class="settings-card-icon">
+                <i class="bi bi-building"></i>
+            </div>
+
+            <div>
+
+                <h2>
+                    Business Information
+                </h2>
+
+                <p>
+                    Basic information about your travel business.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="settings-card-body">
+
+            <div class="settings-form-grid">
+
+                <div class="settings-field">
+
+                    <label for="{{ form.business_name.id_for_label }}">
+                        Business Name
+                    </label>
+
+                    {{ form.business_name }}
+
+                    {% if form.business_name.errors %}
+                        <div class="settings-error">
+                            {{ form.business_name.errors }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+                <div class="settings-field">
+
+                    <label for="{{ form.email.id_for_label }}">
+                        Business Email
+                    </label>
+
+                    {{ form.email }}
+
+                    {% if form.email.errors %}
+                        <div class="settings-error">
+                            {{ form.email.errors }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+                <div class="settings-field">
+
+                    <label for="{{ form.phone.id_for_label }}">
+                        Phone Number
+                    </label>
+
+                    {{ form.phone }}
+
+                    {% if form.phone.errors %}
+                        <div class="settings-error">
+                            {{ form.phone.errors }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+                <div class="settings-field">
+
+                    <label for="{{ form.whatsapp.id_for_label }}">
+                        WhatsApp Number
+                    </label>
+
+                    {{ form.whatsapp }}
+
+                    {% if form.whatsapp.errors %}
+                        <div class="settings-error">
+                            {{ form.whatsapp.errors }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+                <div class="settings-field settings-field-full">
+
+                    <label for="{{ form.address.id_for_label }}">
+                        Business Address
+                    </label>
+
+                    {{ form.address }}
+
+                    {% if form.address.errors %}
+                        <div class="settings-error">
+                            {{ form.address.errors }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- WEBSITE INFORMATION -->
+
+    <div class="settings-card">
+
+        <div class="settings-card-header">
+
+            <div class="settings-card-icon">
+                <i class="bi bi-globe2"></i>
+            </div>
+
+            <div>
+
+                <h2>
+                    Website Information
+                </h2>
+
+                <p>
+                    Information used throughout the Wanderwell website.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="settings-card-body">
+
+            <div class="settings-field">
+
+                <label for="{{ form.website_description.id_for_label }}">
+                    Website Description
+                </label>
+
+                {{ form.website_description }}
+
+                {% if form.website_description.errors %}
+                    <div class="settings-error">
+                        {{ form.website_description.errors }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+
+            <div class="settings-field">
+
+                <label for="{{ form.planning_message.id_for_label }}">
+                    Planning Message
+                </label>
+
+                {{ form.planning_message }}
+
+                {% if form.planning_message.errors %}
+                    <div class="settings-error">
+                        {{ form.planning_message.errors }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SOCIAL MEDIA -->
+
+    <div class="settings-card">
+
+        <div class="settings-card-header">
+
+            <div class="settings-card-icon">
+                <i class="bi bi-share"></i>
+            </div>
+
+            <div>
+
+                <h2>
+                    Social Media
+                </h2>
+
+                <p>
+                    Add Wanderwell's social media pages.
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="settings-card-body">
+
+            <div class="settings-form-grid">
+
+                <div class="settings-field">
+
+                    <label for="{{ form.instagram.id_for_label }}">
+                        Instagram
+                    </label>
+
+                    {{ form.instagram }}
+
+                    {% if form.instagram.errors %}
+                        <div class="settings-error">
+                            {{ form.instagram.errors }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+
+                <div class="settings-field">
+
+                    <label for="{{ form.facebook.id_for_label }}">
+                        Facebook
+                    </label>
+
+                    {{ form.facebook }}
+
+                    {% if form.facebook.errors %}
+                        <div class="settings-error">
+                            {{ form.facebook.errors }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SAVE -->
+
+    <div class="settings-save-area">
+
+        <button
+            type="submit"
+            class="settings-save-button"
+        >
+            <i class="bi bi-check2-circle"></i>
+            Save Settings
+        </button>
+
+    </div>
+
+</form>
+
+{% endblock %}

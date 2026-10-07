@@ -1,0 +1,533 @@
+
+{% extends "admin_dashboard/admin_base.html" %}
+
+{% block title %}Planning Enquiries | Wanderwell{% endblock %}
+
+{% block page_heading %}
+Planning Enquiries
+{% endblock %}
+
+{% block planning_active %}
+active
+{% endblock %}
+
+{% block content %}
+
+<!-- PAGE HEADER -->
+<div class="admin-page-header">
+    <div>
+        <span class="admin-page-header-eyebrow">TRAVEL PLANNING</span>
+        <h1>Planning enquiries</h1>
+        <p>
+            Manage customer travel requests and track each enquiry
+            from first contact to completion.
+        </p>
+    </div>
+</div>
+
+
+<!-- STATISTICS -->
+<div class="dashboard-stat-grid">
+
+    <!-- TOTAL ENQUIRIES -->
+    <div class="dashboard-stat-card">
+        <div class="dashboard-stat-top">
+            <span class="dashboard-stat-label">
+                Total enquiries
+            </span>
+
+            <div class="dashboard-stat-icon planning">
+                <i class="bi bi-map"></i>
+            </div>
+        </div>
+
+        <div class="dashboard-stat-number">
+            {{ planning_count }}
+        </div>
+
+        <p>All customer planning requests</p>
+    </div>
+
+
+    <!-- NEW ENQUIRIES -->
+    <div class="dashboard-stat-card">
+        <div class="dashboard-stat-top">
+            <span class="dashboard-stat-label">
+                New
+            </span>
+
+            <div class="dashboard-stat-icon pending">
+                <i class="bi bi-envelope"></i>
+            </div>
+        </div>
+
+        <div class="dashboard-stat-number">
+            {{ new_count }}
+        </div>
+
+        <p>Awaiting first contact</p>
+    </div>
+
+
+    <!-- CONTACTED ENQUIRIES -->
+    <div class="dashboard-stat-card">
+        <div class="dashboard-stat-top">
+            <span class="dashboard-stat-label">
+                Contacted
+            </span>
+
+            <div class="dashboard-stat-icon total">
+                <i class="bi bi-chat-dots"></i>
+            </div>
+        </div>
+
+        <div class="dashboard-stat-number">
+            {{ contacted_count }}
+        </div>
+
+        <p>Requests currently being handled</p>
+    </div>
+
+
+    <!-- COMPLETED ENQUIRIES -->
+    <div class="dashboard-stat-card">
+        <div class="dashboard-stat-top">
+            <span class="dashboard-stat-label">
+                Completed
+            </span>
+
+            <div class="dashboard-stat-icon published">
+                <i class="bi bi-check-circle"></i>
+            </div>
+        </div>
+
+        <div class="dashboard-stat-number">
+            {{ completed_count }}
+        </div>
+
+        <p>Planning requests completed</p>
+    </div>
+
+</div>
+
+
+<!-- SEARCH AND FILTER -->
+<form method="get" class="admin-filter-bar">
+
+    <div class="admin-search-box">
+        <i class="bi bi-search"></i>
+
+        <input
+            type="search"
+            name="q"
+            value="{{ search }}"
+            placeholder="Search name, email, destination..."
+        >
+    </div>
+
+
+    <select
+        name="status"
+        class="admin-filter-select"
+    >
+        <option value="">
+            All statuses
+        </option>
+
+        <option
+            value="new"
+            {% if status == 'new' %}selected{% endif %}
+        >
+            New
+        </option>
+
+        <option
+            value="contacted"
+            {% if status == 'contacted' %}selected{% endif %}
+        >
+            Contacted
+        </option>
+
+        <option
+            value="completed"
+            {% if status == 'completed' %}selected{% endif %}
+        >
+            Completed
+        </option>
+    </select>
+
+
+    <button
+        type="submit"
+        class="admin-button admin-button-primary"
+    >
+        <i class="bi bi-funnel"></i>
+        Filter
+    </button>
+
+
+    {% if search or status %}
+        <a
+            href="{% url 'admin_planning' %}"
+            class="admin-button admin-button-secondary"
+        >
+            Clear
+        </a>
+    {% endif %}
+
+</form>
+
+
+<!-- CUSTOMER REQUESTS -->
+<div class="admin-card">
+
+    <div class="admin-card-header">
+        <div>
+            <span class="admin-page-header-eyebrow">
+                CUSTOMER REQUESTS
+            </span>
+
+            <h2 class="admin-card-title">
+                {% if search or status %}
+                    Filtered enquiries
+                {% else %}
+                    All enquiries
+                {% endif %}
+            </h2>
+
+            <p class="admin-card-subtitle">
+                {{ enquiries|length }}
+                result{{ enquiries|length|pluralize }}
+            </p>
+        </div>
+    </div>
+
+
+    <div class="admin-card-body">
+
+        {% if enquiries %}
+
+            <div class="admin-enquiry-list">
+
+                {% for enquiry in enquiries %}
+
+                    <article class="admin-enquiry-item">
+
+
+                        <!-- CUSTOMER HEADER -->
+                        <div class="admin-enquiry-header">
+
+                            <div class="admin-enquiry-person">
+
+                                <div class="admin-enquiry-avatar">
+                                    {{ enquiry.name|first|upper }}
+                                </div>
+
+
+                                <div>
+                                    <strong>
+                                        {{ enquiry.name }}
+                                    </strong>
+
+
+                                    <span>
+                                        <a href="mailto:{{ enquiry.email }}">
+                                            <i class="bi bi-envelope"></i>
+                                            {{ enquiry.email }}
+                                        </a>
+                                    </span>
+
+
+                                    {% if enquiry.phone %}
+                                        <span>
+                                            <a href="tel:{{ enquiry.phone }}">
+                                                <i class="bi bi-telephone"></i>
+                                                {{ enquiry.phone }}
+                                            </a>
+                                        </span>
+                                    {% endif %}
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="admin-enquiry-date">
+                                <i class="bi bi-calendar3"></i>
+
+                                Submitted
+                                {{ enquiry.created_at|date:"M j, Y" }}
+                                at
+                                {{ enquiry.created_at|date:"g:i A" }}
+                            </div>
+
+                        </div>
+
+
+                        <!-- STATUS BADGE -->
+                        <div class="planning-status-area">
+
+                            {% if enquiry.status == 'new' %}
+
+                                <span class="planning-status planning-status-new">
+                                    <i class="bi bi-circle-fill"></i>
+                                    New
+                                </span>
+
+                            {% elif enquiry.status == 'contacted' %}
+
+                                <span class="planning-status planning-status-contacted">
+                                    <i class="bi bi-chat-dots-fill"></i>
+                                    Contacted
+                                </span>
+
+                            {% elif enquiry.status == 'completed' %}
+
+                                <span class="planning-status planning-status-completed">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    Completed
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- TRAVEL DETAILS -->
+                        <div class="admin-enquiry-details">
+
+                            <!-- DESTINATION -->
+                            <div class="admin-enquiry-detail">
+                                <span>
+                                    <i class="bi bi-geo-alt"></i>
+                                    Destination
+                                </span>
+
+                                <strong>
+                                    {{ enquiry.destination|default:"Not specified" }}
+                                </strong>
+                            </div>
+
+
+                            <!-- TRAVEL DATES -->
+                            <div class="admin-enquiry-detail">
+                                <span>
+                                    <i class="bi bi-calendar-event"></i>
+                                    Travel dates
+                                </span>
+
+                                <strong>
+                                    {{ enquiry.travel_dates|default:"Flexible" }}
+                                </strong>
+                            </div>
+
+
+                            <!-- TRAVELLERS -->
+                            <div class="admin-enquiry-detail">
+                                <span>
+                                    <i class="bi bi-people"></i>
+                                    Travellers
+                                </span>
+
+                                <strong>
+                                    {{ enquiry.travellers }}
+                                </strong>
+                            </div>
+
+                        </div>
+
+
+                        <!-- BUDGET -->
+                        <div class="admin-enquiry-budget">
+
+                            <div class="admin-enquiry-budget-icon">
+                                <i class="bi bi-wallet2"></i>
+                            </div>
+
+
+                            <div class="admin-enquiry-budget-content">
+
+                                <span>
+                                    Approximate budget
+                                </span>
+
+
+                                <strong>
+                                    {% if enquiry.budget %}
+                                        {{ enquiry.get_currency_display }}
+                                        {{ enquiry.budget|floatformat:2 }}
+                                    {% else %}
+                                        Not specified
+                                    {% endif %}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- TRAVEL STYLE -->
+                        <div class="admin-enquiry-style">
+                            <i class="bi bi-stars"></i>
+
+                            <span>
+                                Travel style
+                            </span>
+
+                            <strong>
+                                {{ enquiry.get_travel_style_display }}
+                            </strong>
+                        </div>
+
+
+                        <!-- CUSTOMER MESSAGE -->
+                        {% if enquiry.message %}
+
+                            <div class="admin-enquiry-message">
+
+                                <span>
+                                    <i class="bi bi-chat-left-text"></i>
+                                    Customer message
+                                </span>
+
+                                <p>
+                                    {{ enquiry.message|linebreaksbr }}
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <!-- ENQUIRY ACTIONS -->
+                        <div class="planning-enquiry-actions">
+
+
+                            <!-- VIEW DETAILS -->
+                            <div class="planning-view-detail">
+                                <a
+                                    href="{% url 'admin_planning_detail' enquiry.id %}"
+                                    class="planning-view-detail-button"
+                                >
+                                    <i class="bi bi-eye"></i>
+                                    View enquiry details
+                                </a>
+                            </div>
+
+
+                            <!-- UPDATE STATUS -->
+                            <div class="planning-status-update">
+
+                                <span class="planning-action-label">
+                                    Update status
+                                </span>
+
+
+                                <form
+                                    method="post"
+                                    action="{% url 'admin_planning_status' enquiry.id %}"
+                                    class="planning-status-form"
+                                >
+
+                                    {% csrf_token %}
+
+
+                                    <select
+                                        name="status"
+                                        class="planning-status-select"
+                                    >
+
+                                        <option
+                                            value="new"
+                                            {% if enquiry.status == 'new' %}selected{% endif %}
+                                        >
+                                            New
+                                        </option>
+
+
+                                        <option
+                                            value="contacted"
+                                            {% if enquiry.status == 'contacted' %}selected{% endif %}
+                                        >
+                                            Contacted
+                                        </option>
+
+
+                                        <option
+                                            value="completed"
+                                            {% if enquiry.status == 'completed' %}selected{% endif %}
+                                        >
+                                            Completed
+                                        </option>
+
+                                    </select>
+
+
+                                    <button
+                                        type="submit"
+                                        class="planning-update-button"
+                                    >
+                                        <i class="bi bi-check2"></i>
+                                        Update
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+
+        {% else %}
+
+
+            <!-- EMPTY STATE -->
+            <div class="admin-empty-state">
+
+                <div class="admin-empty-icon">
+                    <i class="bi bi-map"></i>
+                </div>
+
+
+                <h3>
+                    No planning enquiries found
+                </h3>
+
+
+                {% if search or status %}
+
+                    <p>
+                        Try changing your search or status filter.
+                    </p>
+
+
+                    <a
+                        href="{% url 'admin_planning' %}"
+                        class="admin-button admin-button-primary"
+                    >
+                        View all enquiries
+                    </a>
+
+                {% else %}
+
+                    <p>
+                        Customer planning requests will appear here.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,906 @@
+
+{% extends "admin_dashboard/admin_base.html" %}
+{% load static %}
+
+{% block title %}
+    {{ page_title|default:"Proposal" }} | Wanderwell Admin
+{% endblock %}
+
+
+{% block content %}
+
+<div class="admin-proposal-page">
+
+    <!-- =====================================================
+         PAGE HEADER
+         ===================================================== -->
+
+    <div class="admin-proposal-header">
+
+        <div class="admin-proposal-header-main">
+
+            <a
+                href="{% url 'admin_planning_detail' enquiry.id %}"
+                class="admin-proposal-back"
+            >
+                <i class="bi bi-arrow-left"></i>
+                Back to enquiry
+            </a>
+
+            <span class="admin-proposal-eyebrow">
+                TRAVEL PROPOSAL
+            </span>
+
+            <h1>
+                {{ page_title|default:"Proposal" }}
+            </h1>
+
+            <p>
+                Create and manage a personalised travel proposal for
+                <strong>{{ enquiry.name }}</strong>.
+            </p>
+
+        </div>
+
+
+        {% if proposal %}
+
+        <div class="admin-proposal-status
+                    admin-proposal-status-{{ proposal.status }}">
+
+            <span class="admin-proposal-status-label">
+                STATUS
+            </span>
+
+            <strong>
+                {{ proposal.get_status_display }}
+            </strong>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =====================================================
+         CUSTOMER CHANGE REQUEST
+         ===================================================== -->
+
+    {% if proposal and proposal.customer_message %}
+
+    <section class="admin-proposal-change-request">
+
+        <div class="admin-proposal-change-request-header">
+
+            <div class="admin-proposal-change-request-title">
+
+                <div class="admin-proposal-change-request-icon">
+                    <i class="bi bi-chat-left-text"></i>
+                </div>
+
+                <div>
+
+                    <span class="admin-proposal-change-request-eyebrow">
+                        CUSTOMER RESPONSE
+                    </span>
+
+                    <h2>
+                        Changes Requested
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            {% if proposal.responded_at %}
+
+            <div class="admin-proposal-change-request-date">
+
+                <span>
+                    Requested on
+                </span>
+
+                <strong>
+                    {{ proposal.responded_at|date:"d M Y, H:i" }}
+                </strong>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="admin-proposal-change-request-message">
+
+            {{ proposal.customer_message|linebreaks }}
+
+        </div>
+
+
+        <div class="admin-proposal-change-request-note">
+
+            <i class="bi bi-info-circle"></i>
+
+            <span>
+                Review the customer's request below and update the
+                proposal before sending it again.
+            </span>
+
+        </div>
+
+    </section>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         CUSTOMER SUMMARY
+         ===================================================== -->
+
+    <section class="admin-proposal-customer">
+
+        <div class="admin-proposal-customer-icon">
+
+            <i class="bi bi-person"></i>
+
+        </div>
+
+
+        <div class="admin-proposal-customer-info">
+
+            <span>
+                CUSTOMER
+            </span>
+
+            <strong>
+                {{ enquiry.name }}
+            </strong>
+
+            {% if enquiry.email %}
+
+            <small>
+                {{ enquiry.email }}
+            </small>
+
+            {% endif %}
+
+            {% if enquiry.phone %}
+
+            <small>
+                {{ enquiry.phone }}
+            </small>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="admin-proposal-trip-info">
+
+            <div>
+
+                <span>
+                    DESTINATION
+                </span>
+
+                <strong>
+                    {{ enquiry.destination|default:"Not specified" }}
+                </strong>
+
+            </div>
+
+
+            <div>
+
+                <span>
+                    TRAVELLERS
+                </span>
+
+                <strong>
+                    {{ enquiry.travellers|default:"Not specified" }}
+                </strong>
+
+            </div>
+
+
+            {% if enquiry.travel_style %}
+
+            <div>
+
+                <span>
+                    TRAVEL STYLE
+                </span>
+
+                <strong>
+                    {{ enquiry.get_travel_style_display }}
+                </strong>
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FORM
+         ===================================================== -->
+
+    <form
+        method="post"
+        class="admin-proposal-form"
+    >
+
+        {% csrf_token %}
+
+
+        <!-- =================================================
+             FORM ERRORS
+             ================================================= -->
+
+        {% if form.non_field_errors %}
+
+        <div class="admin-proposal-error">
+
+            <i class="bi bi-exclamation-circle"></i>
+
+            <div>
+
+                {% for error in form.non_field_errors %}
+
+                <p>
+                    {{ error }}
+                </p>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             BUDGET COMPARISON
+             ================================================= -->
+
+        {% if proposal %}
+
+        <section class="pricing-budget-summary">
+
+            <div class="pricing-summary-item">
+
+                <span>
+                    Customer Budget
+                </span>
+
+                <strong>
+                    {{ enquiry.currency }}
+                    {{ customer_budget|floatformat:2 }}
+                </strong>
+
+            </div>
+
+
+            <div class="pricing-summary-item">
+
+                <span>
+                    Proposal Total
+                </span>
+
+                <strong>
+                    {{ enquiry.currency }}
+                    {{ proposal_total|floatformat:2 }}
+                </strong>
+
+            </div>
+
+
+            <div class="pricing-summary-item">
+
+                <span>
+                    Budget Difference
+                </span>
+
+                <strong
+                    class="{% if within_budget %}budget-within{% else %}budget-over{% endif %}"
+                >
+                    {{ enquiry.currency }}
+                    {{ budget_difference|floatformat:2 }}
+                </strong>
+
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             PROPOSAL DETAILS
+             ================================================= -->
+
+        <section class="admin-proposal-card">
+
+            <div class="admin-proposal-card-heading">
+
+                <div class="admin-proposal-card-icon">
+
+                    <i class="bi bi-file-earmark-text"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        Proposal Details
+                    </h2>
+
+                    <p>
+                        Give the customer a clear overview of their
+                        proposed trip.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- TITLE -->
+
+            <div class="admin-proposal-field">
+
+                <label for="{{ form.title.id_for_label }}">
+                    Proposal Title
+                </label>
+
+                {{ form.title }}
+
+                {% if form.title.errors %}
+
+                <div class="admin-proposal-field-error">
+
+                    {{ form.title.errors }}
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="admin-proposal-field">
+
+                <label for="{{ form.description.id_for_label }}">
+                    Trip Description
+                </label>
+
+                {{ form.description }}
+
+                {% if form.description.errors %}
+
+                <div class="admin-proposal-field-error">
+
+                    {{ form.description.errors }}
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- ITINERARY -->
+
+            <div class="admin-proposal-field">
+
+                <label for="{{ form.itinerary.id_for_label }}">
+                    Itinerary
+                </label>
+
+                <p class="admin-proposal-help">
+                    Describe the planned journey day by day.
+                </p>
+
+                {{ form.itinerary }}
+
+                {% if form.itinerary.errors %}
+
+                <div class="admin-proposal-field-error">
+
+                    {{ form.itinerary.errors }}
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             TRIP COSTS
+             ================================================= -->
+
+        <section class="admin-proposal-card">
+
+            <div class="admin-proposal-card-heading">
+
+                <div class="admin-proposal-card-icon">
+
+                    <i class="bi bi-cash-stack"></i>
+
+                </div>
+
+
+                <div>
+
+                    <h2>
+                        Trip Costs
+                    </h2>
+
+                    <p>
+                        Enter the estimated costs for the customer's
+                        proposed trip.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="admin-proposal-cost-grid">
+
+
+                <!-- FLIGHTS -->
+
+                <div class="admin-proposal-field">
+
+                    <label for="{{ form.flight_cost.id_for_label }}">
+                        Flights
+                    </label>
+
+                    {{ form.flight_cost }}
+
+                    {% if form.flight_cost.errors %}
+
+                    <div class="admin-proposal-field-error">
+
+                        {{ form.flight_cost.errors }}
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- ACCOMMODATION -->
+
+                <div class="admin-proposal-field">
+
+                    <label for="{{ form.accommodation_cost.id_for_label }}">
+                        Accommodation
+                    </label>
+
+                    {{ form.accommodation_cost }}
+
+                    {% if form.accommodation_cost.errors %}
+
+                    <div class="admin-proposal-field-error">
+
+                        {{ form.accommodation_cost.errors }}
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- TRANSPORT -->
+
+                <div class="admin-proposal-field">
+
+                    <label for="{{ form.transport_cost.id_for_label }}">
+                        Transport
+                    </label>
+
+                    {{ form.transport_cost }}
+
+                    {% if form.transport_cost.errors %}
+
+                    <div class="admin-proposal-field-error">
+
+                        {{ form.transport_cost.errors }}
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- ACTIVITIES -->
+
+                <div class="admin-proposal-field">
+
+                    <label for="{{ form.activities_cost.id_for_label }}">
+                        Activities
+                    </label>
+
+                    {{ form.activities_cost }}
+
+                    {% if form.activities_cost.errors %}
+
+                    <div class="admin-proposal-field-error">
+
+                        {{ form.activities_cost.errors }}
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- OTHER -->
+
+                <div class="admin-proposal-field">
+
+                    <label for="{{ form.other_cost.id_for_label }}">
+                        Other Costs
+                    </label>
+
+                    {{ form.other_cost }}
+
+                    {% if form.other_cost.errors %}
+
+                    <div class="admin-proposal-field-error">
+
+                        {{ form.other_cost.errors }}
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- SERVICE FEE -->
+
+                <div class="admin-proposal-field">
+
+                    <label for="{{ form.service_fee.id_for_label }}">
+                        Wanderwell Service Fee
+                    </label>
+
+                    {{ form.service_fee }}
+
+                    {% if form.service_fee.errors %}
+
+                    <div class="admin-proposal-field-error">
+
+                        {{ form.service_fee.errors }}
+
+                    </div>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 LIVE PRICE SUMMARY
+                 ================================================= -->
+
+            <div class="admin-proposal-price-summary">
+
+                <div>
+
+                    <span>
+                        Trip Cost
+                    </span>
+
+                    <strong id="proposal-trip-cost">
+                        {{ enquiry.currency|default:"₦" }}0.00
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Wanderwell Service Fee
+                    </span>
+
+                    <strong id="proposal-service-fee">
+                        {{ enquiry.currency|default:"₦" }}0.00
+                    </strong>
+
+                </div>
+
+
+                <div class="admin-proposal-total">
+
+                    <span>
+                        Total Proposal Price
+                    </span>
+
+                    <strong id="proposal-total">
+                        {{ enquiry.currency|default:"₦" }}0.00
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             ACTIONS
+             ================================================= -->
+
+        <div class="admin-proposal-actions">
+
+            <a
+                href="{% url 'admin_planning_detail' enquiry.id %}"
+                class="admin-proposal-cancel"
+            >
+                Cancel
+            </a>
+
+
+            <button
+                type="submit"
+                class="admin-proposal-save"
+            >
+
+                <i class="bi bi-check-lg"></i>
+
+                {% if proposal %}
+                    Save Changes
+                {% else %}
+                    Save Proposal
+                {% endif %}
+
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <!-- =====================================================
+         SEND PROPOSAL
+         ===================================================== -->
+
+    {% if proposal %}
+
+        {% if proposal.status == 'draft' or proposal.status == 'changes_requested' %}
+
+        <section class="admin-proposal-send-card">
+
+            <div class="admin-proposal-send-content">
+
+                <span>
+                    READY TO SEND?
+                </span>
+
+                <h2>
+                    Send this proposal to {{ enquiry.name }}?
+                </h2>
+
+                <p>
+                    Once sent, the customer will be able to view
+                    the updated proposal and respond to it.
+                </p>
+
+            </div>
+
+
+            <form
+                method="post"
+                action="{% url 'admin_proposal_send' proposal.id %}"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="admin-proposal-send"
+                >
+
+                    <i class="bi bi-send"></i>
+
+                    Send to Customer
+
+                </button>
+
+            </form>
+
+        </section>
+
+        {% endif %}
+
+    {% endif %}
+
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        const fields = [
+            'id_flight_cost',
+            'id_accommodation_cost',
+            'id_transport_cost',
+            'id_activities_cost',
+            'id_other_cost'
+        ];
+
+
+        const serviceFeeField =
+            document.getElementById(
+                'id_service_fee'
+            );
+
+
+        const tripCostElement =
+            document.getElementById(
+                'proposal-trip-cost'
+            );
+
+
+        const serviceFeeElement =
+            document.getElementById(
+                'proposal-service-fee'
+            );
+
+
+        const totalElement =
+            document.getElementById(
+                'proposal-total'
+            );
+
+
+        function getValue(id) {
+
+            const element =
+                document.getElementById(id);
+
+            if (!element) {
+                return 0;
+            }
+
+            const value =
+                parseFloat(element.value);
+
+            return isNaN(value)
+                ? 0
+                : value;
+        }
+
+
+        function formatMoney(value) {
+
+            return new Intl.NumberFormat(
+                'en-NG',
+                {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }
+            ).format(value);
+
+        }
+
+
+        function calculateProposalTotal() {
+
+            let tripCost = 0;
+
+
+            fields.forEach(
+                function (id) {
+
+                    tripCost += getValue(id);
+
+                }
+            );
+
+
+            const serviceFee =
+                serviceFeeField
+                    ? getValue('id_service_fee')
+                    : 0;
+
+
+            const total =
+                tripCost + serviceFee;
+
+
+            if (tripCostElement) {
+
+                tripCostElement.textContent =
+                    '₦' + formatMoney(tripCost);
+
+            }
+
+
+            if (serviceFeeElement) {
+
+                serviceFeeElement.textContent =
+                    '₦' + formatMoney(serviceFee);
+
+            }
+
+
+            if (totalElement) {
+
+                totalElement.textContent =
+                    '₦' + formatMoney(total);
+
+            }
+
+        }
+
+
+        fields.forEach(
+            function (id) {
+
+                const element =
+                    document.getElementById(id);
+
+                if (element) {
+
+                    element.addEventListener(
+                        'input',
+                        calculateProposalTotal
+                    );
+
+                }
+
+            }
+        );
+
+
+        if (serviceFeeField) {
+
+            serviceFeeField.addEventListener(
+                'input',
+                calculateProposalTotal
+            );
+
+        }
+
+
+        calculateProposalTotal();
+
+    }
+);
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,1067 @@
+{% extends "admin_dashboard/admin_base.html" %}
+
+{% block title %}
+    Planning Enquiry — {{ enquiry.name }}
+{% endblock %}
+
+{% block planning_active %}
+    active
+{% endblock %}
+
+{% block page_heading %}
+    Planning Enquiry
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-page-header">
+    <div>
+        <div class="admin-breadcrumb">
+            <a href="{% url 'admin_planning' %}">
+                Planning Enquiries
+            </a>
+            <i class="bi bi-chevron-right"></i>
+            <span>{{ enquiry.name }}</span>
+        </div>
+
+        <h1 class="admin-page-title">
+            Customer Enquiry
+        </h1>
+
+        <p class="admin-page-subtitle">
+            Review the customer's travel requirements and manage the enquiry.
+        </p>
+    </div>
+
+    <div class="planning-detail-header-action">
+        <a
+            href="{% url 'admin_planning' %}"
+            class="admin-button admin-button-secondary"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Back to Enquiries
+        </a>
+    </div>
+</div>
+
+
+<!-- CUSTOMER HEADER -->
+
+<div class="planning-detail-card">
+
+    <div class="planning-detail-customer-header">
+
+        <div class="planning-detail-customer">
+
+            <div class="planning-detail-avatar">
+                {{ enquiry.name|first|upper }}
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ enquiry.name }}
+                </h2>
+
+                <div class="planning-detail-contact">
+
+                    <a href="mailto:{{ enquiry.email }}">
+                        <i class="bi bi-envelope"></i>
+                        {{ enquiry.email }}
+                    </a>
+
+                    {% if enquiry.phone %}
+                        <a href="tel:{{ enquiry.phone }}">
+                            <i class="bi bi-telephone"></i>
+                            {{ enquiry.phone }}
+                        </a>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="planning-detail-submitted">
+
+            <span>
+                Submitted
+            </span>
+
+            <strong>
+                {{ enquiry.created_at|date:"M d, Y" }}
+            </strong>
+
+            <small>
+                {{ enquiry.created_at|date:"g:i A" }}
+            </small>
+
+        </div>
+
+    </div>
+
+
+    <!-- CURRENT STATUS -->
+
+    <div class="planning-detail-status">
+
+        <span class="planning-status
+            {% if enquiry.status == 'new' %}
+                planning-status-new
+            {% elif enquiry.status == 'contacted' %}
+                planning-status-contacted
+            {% elif enquiry.status == 'completed' %}
+                planning-status-completed
+            {% endif %}
+        ">
+            {{ enquiry.get_status_display }}
+        </span>
+
+    </div>
+
+</div>
+
+
+<!-- CUSTOMER JOURNEY -->
+
+<div class="planning-detail-card">
+
+    <div class="planning-detail-section-heading">
+
+        <div class="planning-detail-section-icon">
+            <i class="bi bi-signpost-split"></i>
+        </div>
+
+        <div>
+            <h2>
+                Customer Journey
+            </h2>
+
+            <p>
+                Track this enquiry from the initial request to completion.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="planning-journey">
+
+        <div class="planning-journey-line">
+
+            <div
+                class="planning-journey-progress
+                {% if enquiry.status == 'contacted' %}
+                    journey-contacted
+                {% elif enquiry.status == 'completed' %}
+                    journey-completed
+                {% endif %}"
+            ></div>
+
+        </div>
+
+
+        <!-- NEW -->
+
+        <div class="planning-journey-step
+            {% if enquiry.status == 'new' or enquiry.status == 'contacted' or enquiry.status == 'completed' %}
+                journey-step-active
+            {% endif %}
+        ">
+
+            <div class="planning-journey-icon">
+                {% if enquiry.status == 'new' %}
+                    <i class="bi bi-envelope"></i>
+                {% else %}
+                    <i class="bi bi-check-lg"></i>
+                {% endif %}
+            </div>
+
+            <div class="planning-journey-content">
+
+                <strong>
+                    New
+                </strong>
+
+                <span>
+                    Enquiry received
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- CONTACTED -->
+
+        <div class="planning-journey-step
+            {% if enquiry.status == 'contacted' or enquiry.status == 'completed' %}
+                journey-step-active
+            {% endif %}
+        ">
+
+            <div class="planning-journey-icon">
+
+                {% if enquiry.status == 'completed' %}
+                    <i class="bi bi-check-lg"></i>
+                {% elif enquiry.status == 'contacted' %}
+                    <i class="bi bi-telephone"></i>
+                {% else %}
+                    <i class="bi bi-telephone"></i>
+                {% endif %}
+
+            </div>
+
+            <div class="planning-journey-content">
+
+                <strong>
+                    Contacted
+                </strong>
+
+                <span>
+                    Customer contacted
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- COMPLETED -->
+
+        <div class="planning-journey-step
+            {% if enquiry.status == 'completed' %}
+                journey-step-active
+            {% endif %}
+        ">
+
+            <div class="planning-journey-icon">
+
+                {% if enquiry.status == 'completed' %}
+                    <i class="bi bi-check-lg"></i>
+                {% else %}
+                    <i class="bi bi-flag"></i>
+                {% endif %}
+
+            </div>
+
+            <div class="planning-journey-content">
+
+                <strong>
+                    Completed
+                </strong>
+
+                <span>
+                    Planning completed
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NEXT ACTION -->
+
+    <div class="planning-next-action">
+
+        <div class="planning-next-action-icon">
+
+            {% if enquiry.status == 'new' %}
+                <i class="bi bi-chat-dots"></i>
+            {% elif enquiry.status == 'contacted' %}
+                <i class="bi bi-list-check"></i>
+            {% else %}
+                <i class="bi bi-check-circle"></i>
+            {% endif %}
+
+        </div>
+
+
+        <div>
+
+            {% if enquiry.status == 'new' %}
+
+                <strong>
+                    Next step: Contact this customer
+                </strong>
+
+                <p>
+                    Review their travel requirements and contact them
+                    to discuss their trip.
+                </p>
+
+            {% elif enquiry.status == 'contacted' %}
+
+                <strong>
+                    Next step: Continue planning
+                </strong>
+
+                <p>
+                    Work with the customer on their travel arrangements
+                    and mark the enquiry completed when finished.
+                </p>
+
+            {% else %}
+
+                <strong>
+                    This enquiry is completed
+                </strong>
+
+                <p>
+                    The planning process for this customer has been
+                    marked as completed.
+                </p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- TRIP INFORMATION -->
+
+<div class="planning-detail-card">
+
+    <div class="planning-detail-section-heading">
+
+        <div class="planning-detail-section-icon">
+            <i class="bi bi-airplane"></i>
+        </div>
+
+        <div>
+            <h2>
+                Trip Information
+            </h2>
+
+            <p>
+                The customer's requested travel details.
+            </p>
+        </div>
+
+    </div>
+
+
+    <div class="planning-detail-grid">
+
+        <div class="planning-detail-field">
+
+            <span>
+                Destination
+            </span>
+
+            <strong>
+                {% if enquiry.destination %}
+                    {{ enquiry.destination }}
+                {% else %}
+                    Not specified
+                {% endif %}
+            </strong>
+
+        </div>
+
+
+        <div class="planning-detail-field">
+
+            <span>
+                Travel Dates
+            </span>
+
+            <strong>
+                {% if enquiry.travel_dates %}
+                    {{ enquiry.travel_dates }}
+                {% else %}
+                    Flexible / Not specified
+                {% endif %}
+            </strong>
+
+        </div>
+
+
+        <div class="planning-detail-field">
+
+            <span>
+                Travellers
+            </span>
+
+            <strong>
+                {{ enquiry.travellers }}
+
+                {% if enquiry.travellers == 1 %}
+                    traveller
+                {% else %}
+                    travellers
+                {% endif %}
+
+            </strong>
+
+        </div>
+
+
+        <div class="planning-detail-field">
+
+            <span>
+                Travel Style
+            </span>
+
+            <strong>
+                {{ enquiry.get_travel_style_display }}
+            </strong>
+
+        </div>
+
+
+        <div class="planning-detail-field">
+
+            <span>
+                Budget
+            </span>
+
+            <strong>
+
+                {% if enquiry.budget %}
+
+                    {% if enquiry.currency == 'NGN' %}
+                        ₦{{ enquiry.budget|floatformat:2 }}
+                    {% elif enquiry.currency == 'USD' %}
+                        ${{ enquiry.budget|floatformat:2 }}
+                    {% elif enquiry.currency == 'GBP' %}
+                        £{{ enquiry.budget|floatformat:2 }}
+                    {% elif enquiry.currency == 'EUR' %}
+                        €{{ enquiry.budget|floatformat:2 }}
+                    {% else %}
+                        {{ enquiry.budget|floatformat:2 }}
+                    {% endif %}
+
+                {% else %}
+                    Not specified
+                {% endif %}
+
+            </strong>
+
+        </div>
+
+
+        <div class="planning-detail-field">
+
+            <span>
+                Currency
+            </span>
+
+            <strong>
+                {{ enquiry.get_currency_display }}
+            </strong>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- CUSTOMER MESSAGE -->
+
+<div class="planning-detail-card">
+
+    <div class="planning-detail-section-heading">
+
+        <div class="planning-detail-section-icon">
+            <i class="bi bi-chat-left-text"></i>
+        </div>
+
+        <div>
+
+            <h2>
+                Customer Message
+            </h2>
+
+            <p>
+                Additional information provided by the customer.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="planning-detail-message">
+
+        {% if enquiry.message %}
+
+            {{ enquiry.message|linebreaksbr }}
+
+        {% else %}
+
+            <span class="planning-detail-empty-message">
+                The customer did not provide an additional message.
+            </span>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- CONTACT CUSTOMER -->
+
+<div class="planning-detail-card">
+
+    <div class="planning-detail-section-heading">
+
+        <div class="planning-detail-section-icon">
+            <i class="bi bi-person-lines-fill"></i>
+        </div>
+
+        <div>
+
+            <h2>
+                Contact Customer
+            </h2>
+
+            <p>
+                Choose a convenient way to contact this customer.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="planning-contact-actions">
+
+        <a
+            href="mailto:{{ enquiry.email }}"
+            class="planning-contact-button planning-contact-email"
+        >
+
+            <i class="bi bi-envelope-fill"></i>
+
+            <span>
+                <strong>Email Customer</strong>
+                <small>{{ enquiry.email }}</small>
+            </span>
+
+        </a>
+
+
+        {% if enquiry.phone %}
+
+            <a
+                href="tel:{{ enquiry.phone }}"
+                class="planning-contact-button planning-contact-phone"
+            >
+
+                <i class="bi bi-telephone-fill"></i>
+
+                <span>
+                    <strong>Call Customer</strong>
+                    <small>{{ enquiry.phone }}</small>
+                </span>
+
+            </a>
+
+
+            <a
+                href="https://wa.me/{{ enquiry.whatsapp_number }}"
+                target="_blank"
+                rel="noopener"
+                class="planning-contact-button planning-contact-whatsapp"
+            >
+
+                <i class="bi bi-whatsapp"></i>
+
+                <span>
+                    <strong>WhatsApp</strong>
+                    <small>Start WhatsApp conversation</small>
+                </span>
+
+            </a>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+<!-- STATUS UPDATE -->
+
+<div class="planning-detail-card">
+
+    <div class="planning-detail-section-heading">
+
+        <div class="planning-detail-section-icon">
+            <i class="bi bi-arrow-repeat"></i>
+        </div>
+
+        <div>
+
+            <h2>
+                Update Enquiry Status
+            </h2>
+
+            <p>
+                Keep this customer's enquiry status up to date.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <form
+        method="post"
+        action="{% url 'admin_planning_status' enquiry.id %}"
+        class="planning-detail-status-form"
+    >
+
+        {% csrf_token %}
+
+        <div class="planning-detail-status-control">
+
+            <label for="status">
+                Current Status
+            </label>
+
+            <select
+                name="status"
+                id="status"
+                class="planning-detail-status-select"
+            >
+
+                <option
+                    value="new"
+                    {% if enquiry.status == 'new' %}selected{% endif %}
+                >
+                    New
+                </option>
+
+                <option
+                    value="contacted"
+                    {% if enquiry.status == 'contacted' %}selected{% endif %}
+                >
+                    Contacted
+                </option>
+
+                <option
+                    value="completed"
+                    {% if enquiry.status == 'completed' %}selected{% endif %}
+                >
+                    Completed
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <button
+            type="submit"
+            class="planning-detail-update-button"
+        >
+            <i class="bi bi-check2-circle"></i>
+            Update Status
+        </button>
+
+    </form>
+
+
+</div>
+
+
+<div style="display: flex;">
+
+    <div class="planning-pricing-action">
+
+    <a
+        href="{% url 'admin_planning_pricing' enquiry.id %}"
+        class="admin-button admin-button-primary"
+    >
+        <i class="bi bi-calculator"></i>
+        Set Trip Pricing
+    </a>
+
+</div>
+
+<a
+    href="{% url 'admin_proposal_create' enquiry.id %}"
+    class="planning-action-btn proposal-btn"
+>
+    Create Proposal
+</a>
+
+
+</div>
+
+
+
+<section class="admin-planning-notes">
+
+    <div class="admin-planning-notes-header">
+
+        <div>
+            <span class="admin-planning-notes-eyebrow">
+                INTERNAL
+            </span>
+
+            <h2>
+                Planning notes
+            </h2>
+
+            <p>
+                Private notes for the Wanderwell team.
+                Customers cannot see these notes.
+            </p>
+        </div>
+
+    </div>
+
+
+    <!-- ADD NOTE -->
+
+    <form
+        method="post"
+        action="{% url 'admin_planning_note_add' enquiry.id %}"
+        class="admin-planning-note-form"
+    >
+
+        {% csrf_token %}
+
+        <label for="planning-note">
+            Add a note
+        </label>
+
+        <textarea
+            id="planning-note"
+            name="note"
+            rows="4"
+            placeholder="Record something about this customer's trip..."
+            required
+        ></textarea>
+
+        <div class="admin-planning-note-form-actions">
+
+            <button
+                type="submit"
+                class="admin-planning-note-add-btn"
+            >
+                <i class="bi bi-plus-lg"></i>
+                Add Note
+            </button>
+
+        </div>
+
+    </form>
+
+
+    <!-- EXISTING NOTES -->
+
+    {% if notes %}
+
+        <div class="admin-planning-notes-list">
+
+            {% for note in notes %}
+
+                <article class="admin-planning-note">
+
+                    <div class="admin-planning-note-top">
+
+                        <div>
+
+                            <strong>
+                                {% if note.author %}
+                                    {{ note.author.get_full_name|default:note.author.username }}
+                                {% else %}
+                                    Wanderwell Team
+                                {% endif %}
+                            </strong>
+
+                            <span>
+                                {{ note.created_at|date:"M d, Y · g:i A" }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="admin-planning-note-actions">
+
+                            <button
+                                type="button"
+                                class="admin-note-edit-trigger"
+                                data-note-id="{{ note.id }}"
+                            >
+                                <i class="bi bi-pencil"></i>
+                                Edit
+                            </button>
+
+
+                            <form
+                                method="post"
+                                action="{% url 'admin_planning_note_delete' note.id %}"
+                                onsubmit="return confirm('Delete this internal note?');"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    class="admin-note-delete-btn"
+                                >
+                                    <i class="bi bi-trash"></i>
+                                    Delete
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        class="admin-planning-note-body"
+                        id="note-body-{{ note.id }}"
+                    >
+                        {{ note.note|linebreaks }}
+                    </div>
+
+
+                    <!-- EDIT FORM -->
+
+                    <form
+                        method="post"
+                        action="{% url 'admin_planning_note_edit' note.id %}"
+                        class="admin-planning-note-edit-form"
+                        id="note-edit-{{ note.id }}"
+                        hidden
+                    >
+
+                        {% csrf_token %}
+
+                        <textarea
+                            name="note"
+                            rows="4"
+                            required
+                        >{{ note.note }}</textarea>
+
+                        <div class="admin-planning-note-edit-actions">
+
+                            <button
+                                type="submit"
+                                class="admin-note-save-btn"
+                            >
+                                Save changes
+                            </button>
+
+                            <button
+                                type="button"
+                                class="admin-note-cancel-btn"
+                                data-note-id="{{ note.id }}"
+                            >
+                                Cancel
+                            </button>
+
+                        </div>
+
+                    </form>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="admin-planning-notes-empty">
+
+            <i class="bi bi-journal-text"></i>
+
+            <h3>
+                No internal notes yet
+            </h3>
+
+            <p>
+                Add notes here to keep track of conversations,
+                customer preferences and planning decisions.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+<section class="admin-planning-activity">
+
+    <div class="admin-planning-activity-header">
+
+        <span>HISTORY</span>
+
+        <h2>Activity</h2>
+
+        <p>
+            A record of important actions on this enquiry.
+        </p>
+
+    </div>
+
+    {% if activities %}
+
+        <div class="admin-planning-timeline">
+
+            {% for activity in activities %}
+
+                <div class="admin-planning-timeline-item">
+
+                    <div class="admin-planning-timeline-dot">
+
+                        {% if activity.activity_type == 'submitted' %}
+
+                            <i class="bi bi-send"></i>
+
+                        {% elif activity.activity_type == 'status_change' %}
+
+                            <i class="bi bi-arrow-repeat"></i>
+
+                        {% elif activity.activity_type == 'note_added' %}
+
+                            <i class="bi bi-journal-text"></i>
+
+                        {% else %}
+
+                            <i class="bi bi-circle"></i>
+
+                        {% endif %}
+
+                    </div>
+
+                    <div class="admin-planning-timeline-content">
+
+                        <strong>
+                            {{ activity.description }}
+                        </strong>
+
+                        <span>
+                            {{ activity.created_at|date:"M d, Y · g:i A" }}
+                        </span>
+
+                        {% if activity.actor %}
+
+                            <small>
+                                by
+                                {{ activity.actor.get_full_name|default:activity.actor.username }}
+                            </small>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="admin-planning-activity-empty">
+
+            <i class="bi bi-clock-history"></i>
+
+            <p>
+                No activity has been recorded yet.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+<div class="planning-detail-footer">
+
+    <a href="{% url 'admin_planning' %}">
+        <i class="bi bi-arrow-left"></i>
+        Back to Planning Enquiries
+    </a>
+
+</div>
+
+{% block extra_js %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('.admin-note-edit-trigger')
+        .forEach(function (button) {
+
+            button.addEventListener('click', function () {
+
+                const noteId = this.dataset.noteId;
+
+                const body =
+                    document.getElementById(
+                        'note-body-' + noteId
+                    );
+
+                const form =
+                    document.getElementById(
+                        'note-edit-' + noteId
+                    );
+
+                if (body) {
+                    body.hidden = true;
+                }
+
+                if (form) {
+                    form.hidden = false;
+                }
+
+            });
+
+        });
+
+
+    document.querySelectorAll('.admin-note-cancel-btn')
+        .forEach(function (button) {
+
+            button.addEventListener('click', function () {
+
+                const noteId = this.dataset.noteId;
+
+                const body =
+                    document.getElementById(
+                        'note-body-' + noteId
+                    );
+
+                const form =
+                    document.getElementById(
+                        'note-edit-' + noteId
+                    );
+
+                if (body) {
+                    body.hidden = false;
+                }
+
+                if (form) {
+                    form.hidden = true;
+                }
+
+            });
+
+        });
+
+});
+</script>
+
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,163 @@
+{% extends "admin_dashboard/admin_base.html" %}
+{% load static %}
+
+{% block title %}
+    {{ form_title }} | Wanderwell Admin
+{% endblock %}
+
+{% block page_heading %}
+    {{ form_title }}
+{% endblock %}
+
+{% block page_subheading %}
+    Create or update a Wanderwell tour.
+{% endblock %}
+
+{% block extra_css %}
+<link
+    rel="stylesheet"
+    href="{% static 'travel/CSS/admin_content.css' %}"
+>
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-form-page">
+
+    <a
+        href="{% url 'admin_tours' %}"
+        class="admin-content-back"
+    >
+        <i class="bi bi-arrow-left"></i>
+        Back to tours
+    </a>
+
+
+    <div class="admin-form-card">
+
+        <div class="admin-form-heading">
+
+            <span class="admin-content-eyebrow">
+                TOUR
+            </span>
+
+            <h2>
+                {{ form_title }}
+            </h2>
+
+            <p>
+                Enter the information that should appear
+                on the public Tours & Packages page.
+            </p>
+
+        </div>
+
+
+        <form
+            method="post"
+            enctype="multipart/form-data"
+            class="admin-content-form"
+        >
+
+            {% csrf_token %}
+
+
+            <div class="admin-form-image">
+
+                {% if tour and tour.image %}
+
+                    <img
+                        id="contentImagePreview"
+                        src="{{ tour.image.url }}"
+                        alt="{{ tour.headlights }}"
+                    >
+
+                {% else %}
+
+                    <div
+                        id="contentImagePreview"
+                        class="admin-content-image-placeholder"
+                    >
+                        <i class="bi bi-image"></i>
+                    </div>
+
+                {% endif %}
+
+                <label for="{{ form.image.id_for_label }}">
+                    Tour image
+                </label>
+
+                {{ form.image }}
+
+                {% if form.image.errors %}
+                    <div class="admin-content-error">
+                        {{ form.image.errors.0 }}
+                    </div>
+                {% endif %}
+
+            </div>
+
+
+            <div class="admin-form-fields">
+
+                {% for field in form %}
+
+                    {% if field.name != 'image' %}
+
+                        <div class="admin-content-field">
+
+                            <label
+                                for="{{ field.id_for_label }}"
+                            >
+                                {{ field.label }}
+                            </label>
+
+                            {{ field }}
+
+                            {% if field.help_text %}
+                                <small>
+                                    {{ field.help_text }}
+                                </small>
+                            {% endif %}
+
+                            {% if field.errors %}
+                                <div class="admin-content-error">
+                                    {{ field.errors.0 }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+
+
+                <div class="admin-form-buttons">
+
+                    <a
+                        href="{% url 'admin_tours' %}"
+                        class="admin-content-cancel"
+                    >
+                        Cancel
+                    </a>
+
+                    <button
+                        type="submit"
+                        class="admin-content-primary"
+                    >
+                        <i class="bi bi-check2"></i>
+                        {{ submit_text }}
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

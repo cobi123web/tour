@@ -1,0 +1,137 @@
+{% extends "admin_dashboard/admin_base.html" %}
+
+{% block title %}
+    {{ form_title }} | Wanderwell Admin
+{% endblock %}
+
+{% block content %}
+
+<div class="admin-page">
+
+    <div class="admin-page-header">
+
+        <div>
+
+            <a
+                href="{% url 'admin_faqs' %}"
+                class="admin-back-link"
+            >
+                <i class="bi bi-arrow-left"></i>
+                Back to FAQs
+            </a>
+
+            <span class="admin-eyebrow">
+                CONTENT MANAGEMENT
+            </span>
+
+            <h1>
+                {{ form_title }}
+            </h1>
+
+            <p>
+                Create or update a frequently asked question
+                displayed on the website.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="admin-form-card">
+
+        <form
+            method="post"
+            novalidate
+        >
+
+            {% csrf_token %}
+
+
+            {% if form.non_field_errors %}
+
+                <div class="admin-form-error">
+
+                    {{ form.non_field_errors }}
+
+                </div>
+
+            {% endif %}
+
+
+            <div class="admin-form-group">
+
+                <label
+                    for="{{ form.questions.id_for_label }}"
+                >
+                    Question
+                </label>
+
+                {{ form.questions }}
+
+                {% if form.questions.errors %}
+
+                    <div class="admin-field-error">
+                        {{ form.questions.errors.0 }}
+                    </div>
+
+                {% endif %}
+
+                <small>
+                    Maximum 100 characters.
+                </small>
+
+            </div>
+
+
+            <div class="admin-form-group">
+
+                <label
+                    for="{{ form.answers.id_for_label }}"
+                >
+                    Answer
+                </label>
+
+                {{ form.answers }}
+
+                {% if form.answers.errors %}
+
+                    <div class="admin-field-error">
+                        {{ form.answers.errors.0 }}
+                    </div>
+
+                {% endif %}
+
+                <small>
+                    Maximum 1,000 characters.
+                </small>
+
+            </div>
+
+
+            <div class="admin-form-actions">
+
+                <a
+                    href="{% url 'admin_faqs' %}"
+                    class="admin-secondary-btn"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="admin-primary-btn"
+                >
+                    <i class="bi bi-check-lg"></i>
+                    {{ submit_text }}
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

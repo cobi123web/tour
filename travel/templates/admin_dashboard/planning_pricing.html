@@ -1,0 +1,324 @@
+{% extends "admin_dashboard/admin_base.html" %}
+
+{% load static %}
+
+{% block title %}
+Trip Pricing
+{% endblock %}
+
+{% block content %}
+
+<div class="planning-pricing-page">
+
+    <div class="planning-pricing-header">
+
+        <div>
+            <span class="eyebrow">TRIP COSTING</span>
+
+            <h1>Trip Pricing</h1>
+
+            <p>
+                Determine the cost of {{ enquiry.name }}'s trip.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'admin_planning_detail' enquiry.id %}"
+            class="pricing-back-btn"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Back to Enquiry
+        </a>
+
+    </div>
+
+
+    <div class="pricing-customer-card">
+
+        <div>
+            <small>CUSTOMER</small>
+            <strong>{{ enquiry.name }}</strong>
+        </div>
+
+        <div>
+            <small>DESTINATION</small>
+            <strong>
+                {{ enquiry.destination|default:"Not specified" }}
+            </strong>
+        </div>
+
+        <div>
+            <small>TRAVELLERS</small>
+            <strong>{{ enquiry.travellers }}</strong>
+        </div>
+
+        <div>
+            <small>CURRENCY</small>
+            <strong>{{ enquiry.currency }}</strong>
+        </div>
+
+    </div>
+
+    <div class="pricing-budget-summary">
+
+    <div class="pricing-summary-item">
+
+        <span>Customer Budget</span>
+
+        <strong>
+            {{ enquiry.currency }}
+            {{ enquiry.budget|default:0|floatformat:2 }}
+        </strong>
+
+    </div>
+
+
+    <div class="pricing-summary-item">
+
+        <span>Calculated Trip Cost</span>
+
+        <strong>
+            {{ enquiry.currency }}
+            <span id="pricing-summary-total">
+                {{ pricing.total|floatformat:2 }}
+            </span>
+        </strong>
+
+    </div>
+
+
+    <div class="pricing-summary-item">
+
+        <span>Budget Difference</span>
+
+        <strong id="pricing-budget-difference">
+            {{ enquiry.currency }}
+            {{ pricing.budget_difference|floatformat:2 }}
+        </strong>
+
+    </div>
+
+
+    <div class="pricing-budget-status">
+
+        {% if not enquiry.budget %}
+
+            <span class="pricing-status-neutral">
+                No customer budget provided
+            </span>
+
+        {% elif pricing.within_budget %}
+
+            <span class="pricing-status-good">
+                <i class="bi bi-check-circle"></i>
+                Within Customer Budget
+            </span>
+
+        {% else %}
+
+            <span class="pricing-status-warning">
+                <i class="bi bi-exclamation-circle"></i>
+                Above Customer Budget
+            </span>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+    <form method="post" class="pricing-form">
+
+        {% csrf_token %}
+
+        <div class="pricing-card">
+
+            <div class="pricing-card-header">
+
+                <span>COST BREAKDOWN</span>
+
+                <h2>Trip Costs</h2>
+
+                <p>
+                    Enter the estimated cost of each part of the trip.
+                </p>
+
+            </div>
+
+
+            {% for field in form %}
+
+                <div class="pricing-field">
+
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.errors %}
+                        <div class="pricing-error">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+
+            <div class="pricing-total">
+
+                <span>Total Trip Cost</span>
+
+                <strong>
+                    {{ enquiry.currency }}
+                    <span id="pricing-total">
+                        {{ pricing.total|floatformat:2 }}
+                    </span>
+                </strong>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="pricing-save-btn"
+            >
+                <i class="bi bi-check2-circle"></i>
+                Save Pricing
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const fields = [
+        'id_accommodation',
+        'id_transportation',
+        'id_activities',
+        'id_transfers',
+        'id_other_costs',
+        'id_service_fee'
+    ];
+
+    const totalElement = document.getElementById('pricing-total');
+    const summaryTotalElement = document.getElementById(
+        'pricing-summary-total'
+    );
+    const differenceElement = document.getElementById(
+        'pricing-budget-difference'
+    );
+
+    const customerBudget = parseFloat(
+        '{{ enquiry.budget|default_if_none:"0" }}'
+    ) || 0;
+
+    function formatMoney(value) {
+        return value.toLocaleString('en-NG', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+    }
+
+    function calculatePricing() {
+
+        let total = 0;
+
+        fields.forEach(function (fieldId) {
+
+            const field = document.getElementById(fieldId);
+
+            if (field) {
+                const value = parseFloat(field.value) || 0;
+                total += value;
+            }
+
+        });
+
+        /*
+         * Update main total
+         */
+        if (totalElement) {
+            totalElement.textContent = formatMoney(total);
+        }
+
+        /*
+         * Update summary total
+         */
+        if (summaryTotalElement) {
+            summaryTotalElement.textContent = formatMoney(total);
+        }
+
+        /*
+         * Calculate budget difference
+         *
+         * Budget - Trip Cost
+         */
+        const difference = customerBudget - total;
+
+        if (differenceElement) {
+
+            differenceElement.textContent =
+                '{{ enquiry.currency }} ' +
+                formatMoney(difference);
+
+            /*
+             * Change the appearance depending
+             * on whether the trip is within budget.
+             */
+            if (difference >= 0) {
+
+                differenceElement.classList.remove(
+                    'budget-over'
+                );
+
+                differenceElement.classList.add(
+                    'budget-within'
+                );
+
+            } else {
+
+                differenceElement.classList.remove(
+                    'budget-within'
+                );
+
+                differenceElement.classList.add(
+                    'budget-over'
+                );
+
+            }
+        }
+    }
+
+    /*
+     * Watch every pricing field
+     */
+    fields.forEach(function (fieldId) {
+
+        const field = document.getElementById(fieldId);
+
+        if (field) {
+            field.addEventListener(
+                'input',
+                calculatePricing
+            );
+        }
+
+    });
+
+    /*
+     * Calculate immediately when page loads
+     */
+    calculatePricing();
+
+});
+</script>
+
+{% endblock %}
