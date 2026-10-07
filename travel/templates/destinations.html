@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Destinations{% endblock %}
+{% block content %}
+<div class="destination-section">
+    <div class="where-destination-section">
+     <div class="where-destination-title reveal">Where would you like to go?</div>
+     <div class="where-destination-subtitle reveal">Nine of our most-loved destinations, each one vetted and planned by the people who live there.</div>
+     <a href="{% url 'tours' %}" class="browse-button btn">Browse tours &amp; packages</a>
+    </div>
+</div>
+
+<div class="destinations1">
+{% for destination in destinations %}
+
+<div class="destinations reveal">
+<div><img src="{{destination.image.url}}" alt="{{destination.city}}, {{destination.country}}"></div>
+<div class="city">{{destination.city}}</div>
+<div class="country">{{destination.country}}</div>
+</div>
+{% endfor %}
+</div>
+
+<div class="travel-hero" style="background-image: url('{% static 'travel/IMAGE/travel-hero.png'%}');">
+ <div class="hero-text">
+    <div class="hero-title"><span><img src="{% static 'travel/IMAGE/compass4.png'%}" alt="" class="plane-icon"></span>BESPOKE TRAVEL PLANNING</div>
+    <div class="hero-subtitle">Places we know, love, and plan well</div>
+    <div class="hero-description">Browse hand-picked destinations across Europe, Asia, Africa and the Americas — each one lived-in by our local experts and planned around the very best season to go.</div>
+    <div class="hero-buttons">
+        <a href="{% url 'planning' %}" class="hero-browse-button btn btn-light text-dark rounded-pill">Start planning</a>
+    </div>
+ </div>
+</div>
+
+<div class="trust-bar">
+    <div class="trust-item reveal">
+        <i class="bi bi-suitcase2"></i>
+        <div class="trust-number">500+</div>
+        <div class="trust-label">Trips planned</div>
+    </div>
+    <div class="trust-item reveal">
+        <i class="bi bi-globe-americas"></i>
+        <div class="trust-number">40+</div>
+        <div class="trust-label">Countries covered</div>
+    </div>
+    <div class="trust-item reveal">
+        <i class="bi bi-star-fill"></i>
+        <div class="trust-number">4.9/5</div>
+        <div class="trust-label">Average traveler rating</div>
+    </div>
+    <div class="trust-item reveal">
+        <i class="bi bi-headset"></i>
+        <div class="trust-number">24/7</div>
+        <div class="trust-label">Traveler support</div>
+    </div>
+</div>
+
+<div class="why-section">
+<div class="why-title reveal">How we choose every destination</div>
+<div class="why-subtitle reveal"> Wherever you go and whichever tour you choose, these come as standard. </div>
+<div class="reason">
+
+ <div class="index-reason-detail">
+    <div class="reveal">
+    <div><img src="{% static 'travel/IMAGE/compass3.png'%}" alt=""></div>
+     <div class="index-reason-title">Local expertise</div>
+    <div class="index-reason-subtitle">Every destination is recommended by people who live and work there — not pulled from a guidebook.</div>
+    </div>
+
+    <div class="reveal">
+    <div><img src="{% static 'travel/IMAGE/calendar.png'%}" alt=""></div>
+    <div class="index-reason-title">Season-perfect timing</div>
+    <div class="index-reason-subtitle">We plan around the right time of year so you experience each place at its peak, not its crowded worst.</div>
+    </div>
+
+    <div class="reveal">
+    <div><img src="{% static 'travel/IMAGE/heart.png'%}" alt=""></div>
+    <div class="index-reason-title">Authentic over typical</div>
+    <div class="index-reason-subtitle">We favour the experiences locals actually love, steering you away from the generic and overcrowded.</div>
+    </div>
+    
+    
+</div>  
+
+</div>
+</div>
+<div style="background-image: url('{% static 'travel/IMAGE/plan-dessert-image2.png'%}')" class="plan-dessert-image">
+<div class="plan-dessert-text">
+<div class="plan-dessert-title">READY WHEN YOU ARE</div>
+<div class="plan-dessert-subtitle">Found your next destination?</div>
+<div class="plan-dessert-description">Tell us where you're dreaming of and we'll build the whole trip around it — a real conversation, no obligation.</div>
+<a href="{% url 'planning' %}" class="start-plan-button btn  border rounded-pill">Start planning today</a>
+</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const revealEls = document.querySelectorAll('.reveal');
+        if (!('IntersectionObserver' in window)) {
+            revealEls.forEach(el => el.classList.add('in-view'));
+            return;
+        }
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        revealEls.forEach(el => observer.observe(el));
+    });
+</script>
+{% endblock %}
+

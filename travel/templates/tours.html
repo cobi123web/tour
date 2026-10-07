@@ -1,0 +1,580 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Tours & Packages{% endblock %}
+
+{% block content %}
+
+<!-- =====================================================
+     TOURS HERO
+     ===================================================== -->
+
+<div
+    class="travel-hero"
+    style="background-image: url('{% static 'travel/IMAGE/travel-hero.png' %}');"
+>
+
+    <div class="hero-text">
+
+        <div class="hero-title">
+
+            <span>
+
+                <img
+                    src="{% static 'travel/IMAGE/map.png' %}"
+                    alt=""
+                    class="plane-icon"
+                >
+
+            </span>
+
+            BESPOKE TRAVEL PLANNING
+
+        </div>
+
+
+        <div class="hero-subtitle">
+            Tours worth travelling for
+        </div>
+
+
+        <div class="hero-description">
+
+            A handful of journeys we plan most often —
+            each one a starting point we'll rebuild around
+            your dates, budget and pace.
+
+        </div>
+
+
+        <div class="hero-buttons">
+
+            <a
+                href="{% url 'planning' %}"
+                class="hero-browse-button btn btn-light text-dark rounded-pill"
+            >
+                Ask about a tour
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TRUST BAR
+     ===================================================== -->
+
+<div class="trust-bar">
+
+    <div class="trust-item reveal">
+
+        <i class="bi bi-suitcase2"></i>
+
+        <div class="trust-number">
+            500+
+        </div>
+
+        <div class="trust-label">
+            Trips planned
+        </div>
+
+    </div>
+
+
+    <div class="trust-item reveal">
+
+        <i class="bi bi-globe-americas"></i>
+
+        <div class="trust-number">
+            40+
+        </div>
+
+        <div class="trust-label">
+            Countries covered
+        </div>
+
+    </div>
+
+
+    <div class="trust-item reveal">
+
+        <i class="bi bi-star-fill"></i>
+
+        <div class="trust-number">
+            4.9/5
+        </div>
+
+        <div class="trust-label">
+            Average traveler rating
+        </div>
+
+    </div>
+
+
+    <div class="trust-item reveal">
+
+        <i class="bi bi-headset"></i>
+
+        <div class="trust-number">
+            24/7
+        </div>
+
+        <div class="trust-label">
+            Traveler support
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     SIGNATURE TOURS
+     ===================================================== -->
+
+<div class="signature-tours">
+
+    <div class="signature-title reveal">
+        Tours we love to plan
+    </div>
+
+
+    <div class="signature-subtitle reveal">
+
+        Every trip is built from scratch for you —
+        these are a few of the journeys our travelers
+        most often ask for.
+
+    </div>
+
+
+    <div class="tours">
+
+        {% for tour in tours %}
+
+            <div class="tour-card reveal">
+
+
+                <!-- TOUR IMAGE -->
+
+                <div>
+
+                    <img
+                        src="{{ tour.image.url }}"
+                        alt="{{ tour.headlights }}"
+                        class="tour-image"
+                    >
+
+                </div>
+
+
+                <!-- TOUR NAME -->
+
+                <div class="tour-headlights">
+                    {{ tour.headlights }}
+                </div>
+
+
+                <!-- TOUR DESCRIPTION -->
+
+                <div class="tour-descript">
+                    {{ tour.description }}
+                </div>
+
+
+                <!-- =================================================
+                     STAGE 1 FIX
+                     =================================================
+
+                     The planning view expects the tour ID:
+
+                     /planning/?tour=3
+
+                     Previously this used:
+
+                     ?tour={{ tour.headlights|urlencode }}
+
+                     which sent the tour name instead of the
+                     database primary key.
+
+                     ================================================= -->
+
+                <a
+                    href="{% url 'planning' %}?tour={{ tour.id }}"
+                    class="btn btn-success tour-plan-button rounded-pill"
+                >
+                    Plan this tour
+                </a>
+
+            </div>
+
+        {% empty %}
+
+            <div class="reviews-empty">
+
+                No tours are available yet.
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     WHY WANDERWELL
+     ===================================================== -->
+
+<div class="why-section">
+
+    <div class="why-title reveal">
+        What every Wanderwell trip includes
+    </div>
+
+
+    <div class="why-subtitle reveal">
+
+        Wherever you go and whichever tour you choose,
+        these come as standard.
+
+    </div>
+
+
+    <div class="reason">
+
+        <div class="index-reason-detail">
+
+
+            <!-- PERSONAL PLANNING -->
+
+            <div class="reveal">
+
+                <div>
+
+                    <img
+                        src="{% static 'travel/IMAGE/route.png' %}"
+                        alt=""
+                    >
+
+                </div>
+
+
+                <div class="index-reason-title">
+                    Personal trip planning
+                </div>
+
+
+                <div class="index-reason-subtitle">
+
+                    A dedicated planner designs your itinerary
+                    from scratch and refines it with you.
+
+                </div>
+
+            </div>
+
+
+            <!-- SUPPORT -->
+
+            <div class="reveal">
+
+                <div>
+
+                    <img
+                        src="{% static 'travel/IMAGE/support2.png' %}"
+                        alt=""
+                    >
+
+                </div>
+
+
+                <div class="index-reason-title">
+                    On-trip support
+                </div>
+
+
+                <div class="index-reason-subtitle">
+
+                    24/7 help from a real person while you travel,
+                    wherever you are in the world.
+
+                </div>
+
+            </div>
+
+
+            <!-- ACCOMMODATION -->
+
+            <div class="reveal">
+
+                <div>
+
+                    <img
+                        src="{% static 'travel/IMAGE/hotel.png' %}"
+                        alt=""
+                    >
+
+                </div>
+
+
+                <div class="index-reason-title">
+                    Handpicked stays
+                </div>
+
+
+                <div class="index-reason-subtitle">
+
+                    Accommodation chosen for its location,
+                    character and comfort — not just its star rating.
+
+                </div>
+
+            </div>
+
+
+            <!-- PRICING -->
+
+            <div class="reveal">
+
+                <div>
+
+                    <img
+                        src="{% static 'travel/IMAGE/verified.png' %}"
+                        alt=""
+                    >
+
+                </div>
+
+
+                <div class="index-reason-title">
+                    Transparent pricing
+                </div>
+
+
+                <div class="index-reason-subtitle">
+
+                    One clear price for your trip, with exactly
+                    what is covered spelled out before you commit.
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ENQUIRY PROCESS
+     ===================================================== -->
+
+<div class="enquiry-section">
+
+    <div class="plan-title reveal">
+        From enquiry to departure
+    </div>
+
+
+    <div class="plan-subtitle reveal">
+
+        Three simple steps — no pressure,
+        and no obligation until you're ready.
+
+    </div>
+
+
+    <div class="plan-steps">
+
+        <div class="plan-step-circle1 px-auto">
+            1
+        </div>
+
+        <div class="plan-step-line1"></div>
+
+        <div class="plan-step-circle1 px-auto">
+            2
+        </div>
+
+        <div class="plan-step-line1"></div>
+
+        <div class="plan-step-circle1 px-auto">
+            3
+        </div>
+
+        <div class="plan-step-line1"></div>
+
+    </div>
+
+
+    <div class="plan-steps-details">
+
+
+        <div class="step-details reveal">
+
+            <div class="step-title">
+                Enquire about a tour
+            </div>
+
+            <div class="step-subtitle">
+
+                Tell us which journeys caught your eye,
+                or simply where you'd like to go.
+                A planner replies within a day.
+
+            </div>
+
+        </div>
+
+
+        <div class="reveal">
+
+            <div class="step-title">
+                Shape the itinerary
+            </div>
+
+            <div class="step-subtitle">
+
+                Your planner adapts the tour to your dates
+                and budget, and you refine it together
+                until it feels right.
+
+            </div>
+
+        </div>
+
+
+        <div class="reveal">
+
+            <div class="step-title">
+                Confirm and travel
+            </div>
+
+            <div class="step-subtitle">
+
+                Approve your final plan, we handle the bookings,
+                and you travel with full support behind you.
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     FINAL CTA
+     ===================================================== -->
+
+<div
+    style="background-image: url('{% static 'travel/IMAGE/plan-dessert-image3.png' %}')"
+    class="plan-dessert-image"
+>
+
+    <div class="plan-dessert-text">
+
+        <div class="plan-dessert-title">
+            STILL DECIDING
+        </div>
+
+
+        <div class="plan-dessert-subtitle">
+            Not sure which tour fits?
+        </div>
+
+
+        <div class="plan-dessert-description">
+
+            Tell us how you like to travel and we'll suggest
+            the journeys that suit you best — no obligation,
+            no pressure.
+
+        </div>
+
+
+        <a
+            href="{% url 'planning' %}"
+            class="start-plan-button btn border rounded-pill"
+        >
+            Talk to a travel planner
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+    // =====================================================
+    // SCROLL REVEAL
+    // =====================================================
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const revealEls =
+            document.querySelectorAll('.reveal');
+
+
+        if (!('IntersectionObserver' in window)) {
+
+            revealEls.forEach(function (element) {
+
+                element.classList.add('in-view');
+
+            });
+
+            return;
+
+        }
+
+
+        const observer =
+            new IntersectionObserver(
+                function (entries) {
+
+                    entries.forEach(function (entry) {
+
+                        if (entry.isIntersecting) {
+
+                            entry.target.classList.add('in-view');
+
+                            observer.unobserve(entry.target);
+
+                        }
+
+                    });
+
+                },
+                {
+                    threshold: 0.15
+                }
+            );
+
+
+        revealEls.forEach(function (element) {
+
+            observer.observe(element);
+
+        });
+
+    });
+
+</script>
+
+{% endblock %}

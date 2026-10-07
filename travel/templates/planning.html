@@ -1,0 +1,653 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+
+{% block title %}
+    Start Planning
+{% endblock %}
+
+
+{% block meta_description %}
+    {{ site_settings.planning_message|default:"Tell Wanderwell where you want to go, when you want to travel, your budget and travel style, and a local planner will build your trip around it." }}
+{% endblock %}
+
+
+{% block content %}
+
+<!-- =====================================================
+     PLANNING HERO
+     ===================================================== -->
+
+<div
+    class="travel-hero"
+    style="background-image: url('{% static 'travel/IMAGE/travel-hero.png' %}');"
+>
+
+    <div class="hero-text">
+
+        <div class="hero-title">
+
+            <span>
+                <img
+                    src="{% static 'travel/IMAGE/airplane-mode.png' %}"
+                    alt=""
+                    class="plane-icon"
+                >
+            </span>
+
+            BESPOKE TRAVEL PLANNING
+
+        </div>
+
+
+        <div class="hero-subtitle">
+            Let's plan your trip
+        </div>
+
+
+        <div class="hero-description">
+
+            {% if site_settings.planning_message %}
+                {{ site_settings.planning_message }}
+            {% else %}
+                Tell us where you want to go,
+                what you can comfortably spend,
+                and how you like to travel.
+                We'll take it from there.
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     PLANNING FORM
+     ===================================================== -->
+
+<section class="planning-section planning-page-section">
+
+    <div class="planning-title reveal">
+        Tell us about your trip
+    </div>
+
+
+    <div class="planning-subtitle reveal">
+
+        Give us the details that matter —
+        your destination, dates, group size,
+        budget and travel style.
+
+    </div>
+
+
+    <!-- =================================================
+         SUCCESS
+         ================================================= -->
+
+    {% if submitted %}
+
+        <div class="planning-success planning-success-large reveal">
+
+            <i class="bi bi-check-circle-fill"></i>
+
+
+            <div>
+
+                <div class="planning-success-title">
+                    Thanks — we've got it.
+                </div>
+
+
+                <div class="planning-success-text">
+
+                    Your travel enquiry has been submitted successfully.
+
+                    A Wanderwell planner will review your trip requirements
+                    and reach out to start shaping your journey.
+
+                </div>
+
+
+                <div class="planning-success-actions">
+
+                    <a
+                        href="{% url 'index' %}"
+                        class="btn btn-success rounded-pill"
+                    >
+                        <i class="bi bi-house"></i>
+                        Back to home
+                    </a>
+
+
+                    {% if user.is_authenticated %}
+
+                        <a
+                            href="{% url 'profile' %}"
+                            class="btn btn-outline-success rounded-pill"
+                        >
+                            <i class="bi bi-person"></i>
+                            View profile
+                        </a>
+
+                    {% endif %}
+
+
+                    {% if site_settings.whatsapp_number %}
+
+                        <a
+                            href="https://wa.me/{{ site_settings.whatsapp_number }}?text=Hello%20Wanderwell,%20I%20just%20submitted%20a%20travel%20planning%20enquiry%20and%20would%20like%20to%20discuss%20my%20trip."
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="btn btn-success rounded-pill"
+                        >
+                            <i class="bi bi-whatsapp"></i>
+                            Continue on WhatsApp
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+    {% else %}
+
+
+        <!-- =============================================
+             FORM ERRORS
+             ============================================= -->
+
+        {% if form.non_field_errors %}
+
+            <div class="planning-form-error reveal">
+
+                <i class="bi bi-exclamation-circle-fill"></i>
+
+                <div>
+
+                    {% for error in form.non_field_errors %}
+
+                        {{ error }}
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =============================================
+             FORM
+             ============================================= -->
+
+        <form
+            method="post"
+            action="{% url 'planning' %}"
+            class="planning-form reveal"
+            novalidate
+        >
+
+            {% csrf_token %}
+
+
+            <!-- =========================================
+                 CONTACT INFORMATION
+                 ========================================= -->
+
+            <div class="planning-form-section-heading">
+
+                <span>
+                    01
+                </span>
+
+                <div>
+
+                    <strong>
+                        Your details
+                    </strong>
+
+                    <small>
+                        So a travel planner can reach you.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            {% for field in form %}
+
+                {% if field.name == 'name' or field.name == 'email' or field.name == 'phone' %}
+
+                    <div class="form-group {% if field.errors %}has-error{% endif %}">
+
+                        <label for="{{ field.id_for_label }}">
+
+                            {{ field.label }}
+
+                            {% if field.field.required %}
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            {% endif %}
+
+                        </label>
+
+
+                        {{ field }}
+
+
+                        {% if field.help_text %}
+
+                            <div class="form-help">
+                                {{ field.help_text }}
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if field.errors %}
+
+                            <div class="form-error">
+
+                                {% for error in field.errors %}
+
+                                    {{ error }}
+
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+
+            <!-- =========================================
+                 TRIP DETAILS
+                 ========================================= -->
+
+            <div class="planning-form-section-heading">
+
+                <span>
+                    02
+                </span>
+
+                <div>
+
+                    <strong>
+                        Your trip
+                    </strong>
+
+                    <small>
+                        Tell us what you're planning.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            {% for field in form %}
+
+                {% if field.name == 'destination' or field.name == 'travel_dates' or field.name == 'travellers' %}
+
+                    <div class="form-group {% if field.errors %}has-error{% endif %}">
+
+                        <label for="{{ field.id_for_label }}">
+
+                            {{ field.label }}
+
+                            {% if field.field.required %}
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            {% endif %}
+
+                        </label>
+
+
+                        {{ field }}
+
+
+                        {% if field.help_text %}
+
+                            <div class="form-help">
+                                {{ field.help_text }}
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if field.errors %}
+
+                            <div class="form-error">
+
+                                {% for error in field.errors %}
+
+                                    {{ error }}
+
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+
+            <!-- =========================================
+                 BUDGET
+                 ========================================= -->
+
+            <div class="planning-form-section-heading">
+
+                <span>
+                    03
+                </span>
+
+                <div>
+
+                    <strong>
+                        Your budget & travel style
+                    </strong>
+
+                    <small>
+                        This helps us build a realistic trip for you.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            {% for field in form %}
+
+                {% if field.name == 'budget' or field.name == 'currency' or field.name == 'travel_style' %}
+
+                    <div class="form-group {% if field.errors %}has-error{% endif %}">
+
+                        <label for="{{ field.id_for_label }}">
+
+                            {{ field.label }}
+
+                            {% if field.field.required %}
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            {% endif %}
+
+                        </label>
+
+
+                        {{ field }}
+
+
+                        {% if field.help_text %}
+
+                            <div class="form-help">
+                                {{ field.help_text }}
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if field.name == 'budget' %}
+
+                            <div class="form-help budget-help">
+
+                                <i class="bi bi-info-circle"></i>
+
+                                An approximate budget is enough.
+                                You don't need to know the exact cost yet.
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if field.errors %}
+
+                            <div class="form-error">
+
+                                {% for error in field.errors %}
+
+                                    {{ error }}
+
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+
+            <!-- =========================================
+                 ADDITIONAL INFORMATION
+                 ========================================= -->
+
+            <div class="planning-form-section-heading">
+
+                <span>
+                    04
+                </span>
+
+                <div>
+
+                    <strong>
+                        Anything else?
+                    </strong>
+
+                    <small>
+                        Tell us what would make the trip special.
+                    </small>
+
+                </div>
+
+            </div>
+
+
+            {% for field in form %}
+
+                {% if field.name == 'message' %}
+
+                    <div class="form-group {% if field.errors %}has-error{% endif %}">
+
+                        <label for="{{ field.id_for_label }}">
+
+                            {{ field.label }}
+
+                            {% if field.field.required %}
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            {% endif %}
+
+                        </label>
+
+
+                        {{ field }}
+
+
+                        {% if field.help_text %}
+
+                            <div class="form-help">
+                                {{ field.help_text }}
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if field.errors %}
+
+                            <div class="form-error">
+
+                                {% for error in field.errors %}
+
+                                    {{ error }}
+
+                                {% endfor %}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+
+            <!-- =========================================
+                 PRIVACY NOTE
+                 ========================================= -->
+
+            <div class="planning-form-note">
+
+                <i class="bi bi-shield-check"></i>
+
+                <span>
+
+                    Your details are used only to respond
+                    to your travel enquiry.
+
+                </span>
+
+            </div>
+
+
+            <!-- =========================================
+                 SUBMIT
+                 ========================================= -->
+
+            <button
+                type="submit"
+                class="btn btn-success planning-submit rounded-pill"
+            >
+
+                Help me plan my trip
+
+                <i class="bi bi-arrow-right"></i>
+
+            </button>
+
+
+        </form>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        const revealElements =
+            document.querySelectorAll(
+                '.reveal'
+            );
+
+
+        if (
+            !('IntersectionObserver' in window)
+        ) {
+
+            revealElements.forEach(
+                function (element) {
+
+                    element.classList.add(
+                        'in-view'
+                    );
+
+                }
+            );
+
+            return;
+        }
+
+
+        const observer =
+            new IntersectionObserver(
+                function (entries) {
+
+                    entries.forEach(
+                        function (entry) {
+
+                            if (
+                                entry.isIntersecting
+                            ) {
+
+                                entry.target.classList.add(
+                                    'in-view'
+                                );
+
+                                observer.unobserve(
+                                    entry.target
+                                );
+
+                            }
+
+                        }
+                    );
+
+                },
+                {
+                    threshold: 0.12
+                }
+            );
+
+
+        revealElements.forEach(
+            function (element) {
+
+                observer.observe(
+                    element
+                );
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

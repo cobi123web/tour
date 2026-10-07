@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Wanderwell | About Us
+{% endblock %}
+{% block meta_description %}Wanderwell was built on the idea that travel should feel personal — get to know how we plan every trip.{% endblock %}
+
+{% block content %}
+
+<!-- =========================================
+     ABOUT HERO
+========================================== -->
+<section class="page-hero about-hero">
+
+    <div class="container">
+
+        <div class="page-hero-content reveal">
+
+            <span class="section-eyebrow">
+                ABOUT WANDERWELL
+            </span>
+
+            <h1>
+                Travel should
+                <br>
+                feel personal.
+            </h1>
+
+            <p>
+                We believe the best journeys are the ones
+                that are shaped around you.
+            </p>
+
+            <a
+                href="{% url 'planning' %}"
+                class="btn-primary-custom"
+            >
+                Start planning
+                <i class="bi bi-arrow-right"></i>
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     OUR STORY
+========================================== -->
+<section class="destinations-section">
+
+    <div class="container">
+
+        <div class="about-story">
+
+            <div class="about-story-image reveal">
+
+                <img
+                    src="{% static 'travel/IMAGE/travel-hero.png' %}"
+                    alt="Wanderwell travel experience"
+                    loading="lazy"
+                >
+
+            </div>
+
+
+            <div class="about-story-content reveal">
+
+                <span class="section-eyebrow">
+                    OUR STORY
+                </span>
+
+                <h2>
+                    We believe
+                    <br>
+                    in travelling well.
+                </h2>
+
+                <p>
+                    Wanderwell was created around a simple idea:
+                    travel should be more than moving from one
+                    destination to another.
+                </p>
+
+                <p>
+                    It should be about discovering new places,
+                    experiencing different cultures, creating
+                    meaningful memories and having the freedom
+                    to travel in a way that feels right for you.
+                </p>
+
+                <p>
+                    That's why we focus on thoughtful travel
+                    planning and experiences designed around
+                    the individual traveller.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     OUR APPROACH
+========================================== -->
+<section class="about-why-section">
+
+    <div class="container">
+
+        <div class="section-heading reveal">
+
+            <span class="section-eyebrow">
+                OUR APPROACH
+            </span>
+
+            <h2>
+                Thoughtful by design.
+            </h2>
+
+            <p>
+                Every journey starts with understanding
+                what makes travel meaningful to you.
+            </p>
+
+        </div>
+
+
+        <div class="why-grid">
+
+            <div class="why-card reveal">
+
+                <div class="why-icon">
+                    <i class="bi bi-person-heart"></i>
+                </div>
+
+                <h3>
+                    Personal
+                </h3>
+
+                <p>
+                    Your interests, preferences and travel
+                    style shape the experience we create.
+                </p>
+
+            </div>
+
+
+            <div class="why-card reveal">
+
+                <div class="why-icon">
+                    <i class="bi bi-globe2"></i>
+                </div>
+
+                <h3>
+                    Curious
+                </h3>
+
+                <p>
+                    We believe in exploring beyond the obvious
+                    and discovering what makes each destination
+                    unique.
+                </p>
+
+            </div>
+
+
+            <div class="why-card reveal">
+
+                <div class="why-icon">
+                    <i class="bi bi-stars"></i>
+                </div>
+
+                <h3>
+                    Meaningful
+                </h3>
+
+                <p>
+                    We focus on experiences you'll remember
+                    long after you've returned home.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     WHAT WE DO
+========================================== -->
+<section class="tours-section">
+
+    <div class="container">
+
+        <div class="section-heading reveal">
+
+            <span class="section-eyebrow">
+                WHAT WE DO
+            </span>
+
+            <h2>
+                From inspiration to itinerary.
+            </h2>
+
+            <p>
+                Whether you need inspiration or already have
+                a destination in mind, we're here to help.
+            </p>
+
+        </div>
+
+
+        <div class="about-services">
+
+            <div class="about-service-card reveal">
+
+                <span class="about-service-number">
+                    01
+                </span>
+
+                <h3>
+                    Destination discovery
+                </h3>
+
+                <p>
+                    Explore destinations and find places
+                    that match the kind of experience
+                    you're looking for.
+                </p>
+
+            </div>
+
+
+            <div class="about-service-card reveal">
+
+                <span class="about-service-number">
+                    02
+                </span>
+
+                <h3>
+                    Custom travel planning
+                </h3>
+
+                <p>
+                    Tell us your ideas, dates and preferences
+                    and we'll help shape them into a journey.
+                </p>
+
+            </div>
+
+
+            <div class="about-service-card reveal">
+
+                <span class="about-service-number">
+                    03
+                </span>
+
+                <h3>
+                    Curated experiences
+                </h3>
+
+                <p>
+                    Choose from carefully considered tours
+                    and experiences or create something
+                    completely your own.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================
+     CTA
+========================================== -->
+<section class="about-planning-cta">
+
+    <div class="container">
+
+        <div class="planning-content">
+
+            <div class="planning-text reveal">
+
+                <span class="section-eyebrow">
+                    LET'S TRAVEL
+                </span>
+
+                <h2>
+                    Where will
+                    <br>
+                    you go next?
+                </h2>
+
+                <p>
+                    Start with an idea. We'll help you
+                    turn it into a journey.
+                </p>
+
+                <a
+                    href="{% url 'planning' %}"
+                    class="btn-primary-custom"
+                >
+                    Start planning
+                    <i class="bi bi-arrow-right"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const revealEls = document.querySelectorAll('.reveal');
+        if (!('IntersectionObserver' in window)) {
+            revealEls.forEach(el => el.classList.add('in-view'));
+            return;
+        }
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        revealEls.forEach(el => observer.observe(el));
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,719 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block title %}
+    My Profile | {{ site_settings.business_name|default:"Wanderwell" }}
+{% endblock %}
+
+
+{% block meta_description %}
+    Manage your Wanderwell trips, planning enquiries and travel reviews.
+{% endblock %}
+
+
+{% block content %}
+
+<section class="profile-page">
+
+    <div class="profile-container">
+
+
+        <!-- ==================================================
+             PROFILE HEADER
+        ================================================== -->
+
+        <header class="profile-header">
+
+            <div class="profile-avatar-large">
+
+                {{ request.user.username|first|upper }}
+
+            </div>
+
+
+            <h1 class="profile-username">
+
+                Welcome, {{ request.user.username }}
+
+            </h1>
+
+
+            {% if request.user.email %}
+
+                <p class="profile-meta">
+
+                    {{ request.user.email }}
+
+                </p>
+
+            {% endif %}
+
+        </header>
+
+
+
+        <!-- ==================================================
+             PROFILE CONTENT
+        ================================================== -->
+
+        <div class="profile-grid">
+
+
+            <!-- ==================================================
+                 PLANNING ENQUIRIES
+            ================================================== -->
+
+            <section class="profile-card">
+
+
+                <div class="profile-card-heading">
+
+                    <div>
+
+                        <span class="profile-card-eyebrow">
+                            YOUR TRIPS
+                        </span>
+
+                        <h2>
+                            Planning enquiries
+                        </h2>
+
+                    </div>
+
+                    <i class="bi bi-map"></i>
+
+                </div>
+
+
+                <p class="profile-card-intro">
+
+                    Keep track of the trips you have asked
+                    Wanderwell to help you plan.
+
+                </p>
+
+
+                {% if planning_enquiries %}
+
+
+                    <div class="planning-history-list">
+
+
+                        {% for enquiry in planning_enquiries %}
+
+
+                            <article class="planning-history-item">
+
+
+                                <!-- ICON -->
+
+                                <div class="planning-history-icon">
+
+                                    <i class="bi bi-compass"></i>
+
+                                </div>
+
+
+                                <!-- CONTENT -->
+
+                                <div class="planning-history-content">
+
+
+                                    <div class="planning-history-heading">
+
+
+                                        <div>
+
+                                            <div class="planning-history-title">
+
+                                                {% if enquiry.destination %}
+
+                                                    {{ enquiry.destination }}
+
+                                                {% else %}
+
+                                                    Bespoke trip
+
+                                                {% endif %}
+
+                                            </div>
+
+
+                                            <div class="planning-history-meta">
+
+                                                Submitted
+                                                {{ enquiry.created_at|date:"M j, Y" }}
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <!-- STATUS -->
+
+                                        {% if enquiry.status == "new" %}
+
+                                            <span class="customer-planning-status customer-planning-status-new">
+
+                                                <i class="bi bi-circle-fill"></i>
+
+                                                New
+
+                                            </span>
+
+
+                                        {% elif enquiry.status == "contacted" %}
+
+                                            <span class="customer-planning-status customer-planning-status-contacted">
+
+                                                <i class="bi bi-chat-dots-fill"></i>
+
+                                                Contacted
+
+                                            </span>
+
+
+                                        {% elif enquiry.status == "completed" %}
+
+                                            <span class="customer-planning-status customer-planning-status-completed">
+
+                                                <i class="bi bi-check-circle-fill"></i>
+
+                                                Completed
+
+                                            </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+
+
+                                    <!-- TRIP DETAILS -->
+
+                                    <div class="planning-history-details">
+
+
+                                        <div class="planning-history-detail">
+
+                                            <span>
+
+                                                <i class="bi bi-calendar3"></i>
+
+                                                Dates
+
+                                            </span>
+
+                                            <strong>
+
+                                                {{ enquiry.travel_dates|default:"Flexible" }}
+
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div class="planning-history-detail">
+
+                                            <span>
+
+                                                <i class="bi bi-people"></i>
+
+                                                Travellers
+
+                                            </span>
+
+                                            <strong>
+
+                                                {{ enquiry.travellers }}
+
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div class="planning-history-detail">
+
+                                            <span>
+
+                                                <i class="bi bi-wallet2"></i>
+
+                                                Budget
+
+                                            </span>
+
+                                            <strong>
+
+                                                {% if enquiry.budget %}
+
+                                                    {{ enquiry.currency }}
+                                                    {{ enquiry.budget|floatformat:2 }}
+
+                                                {% else %}
+
+                                                    Not specified
+
+                                                {% endif %}
+
+                                            </strong>
+
+                                        </div>
+
+
+                                        <div class="planning-history-detail">
+
+                                            <span>
+
+                                                <i class="bi bi-stars"></i>
+
+                                                Style
+
+                                            </span>
+
+                                            <strong>
+
+                                                {{ enquiry.get_travel_style_display }}
+
+                                            </strong>
+
+                                        </div>
+
+
+                                    </div>
+
+
+
+                                    <!-- MESSAGE -->
+
+                                    {% if enquiry.message %}
+
+                                        <div class="planning-history-message">
+
+                                            <span>
+
+                                                <i class="bi bi-chat-left-text"></i>
+
+                                                Your message
+
+                                            </span>
+
+                                            <p>
+
+                                                {{ enquiry.message|truncatechars:180 }}
+
+                                            </p>
+
+                                        </div>
+
+                                    {% endif %}
+
+
+
+                                    <!-- VIEW DETAILS -->
+
+                                    <a
+                                        href="{% url 'planning_enquiry_detail' enquiry.id %}"
+                                        class="planning-history-link"
+                                    >
+
+                                        View trip details
+
+                                        <i class="bi bi-arrow-right"></i>
+
+                                    </a>
+
+
+                                </div>
+
+                            </article>
+
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <!-- EMPTY -->
+
+                    <div class="profile-empty-state">
+
+
+                        <i class="bi bi-compass"></i>
+
+
+                        <p>
+
+                            You haven't planned a trip with
+                            Wanderwell yet.
+
+                        </p>
+
+
+                        <a
+                            href="{% url 'planning' %}"
+                            class="profile-primary-action"
+                        >
+
+                            <i class="bi bi-plus-circle"></i>
+
+                            Start planning
+
+                        </a>
+
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </section>
+
+
+
+            <!-- ==================================================
+                 REVIEWS
+            ================================================== -->
+
+            <section class="profile-card">
+
+
+                <div class="profile-card-heading">
+
+                    <div>
+
+                        <span class="profile-card-eyebrow">
+                            YOUR EXPERIENCES
+                        </span>
+
+                        <h2>
+                            Your reviews
+                        </h2>
+
+                    </div>
+
+                    <i class="bi bi-chat-square-quote"></i>
+
+                </div>
+
+
+                <p class="profile-card-intro">
+
+                    Reviews you have shared about your
+                    completed Wanderwell trips.
+
+                </p>
+
+
+
+                <!-- REVIEW NOTICE -->
+
+                {% if unreviewed_completed_enquiries %}
+
+                    <div class="profile-review-notice">
+
+                        <i class="bi bi-star"></i>
+
+                        <div>
+
+                            <strong>
+                                You have a trip to review
+                            </strong>
+
+                            <p>
+
+                                Share your experience from one
+                                of your completed trips.
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <a
+                        href="{% url 'leave_review' %}"
+                        class="profile-review-action"
+                    >
+
+                        <i class="bi bi-pencil-square"></i>
+
+                        Leave a review
+
+                    </a>
+
+                {% endif %}
+
+
+
+                <!-- EXISTING REVIEWS -->
+
+                {% if reviews %}
+
+
+                    <div class="profile-reviews-list">
+
+
+                        {% for review in reviews %}
+
+
+                            <article class="profile-review-card">
+
+
+                                <!-- REVIEW HEADER -->
+
+                                <div class="profile-review-header">
+
+
+                                    <div class="profile-review-trip">
+
+
+                                        <div class="profile-review-trip-icon">
+
+                                            <i class="bi bi-map"></i>
+
+                                        </div>
+
+
+                                        <div>
+
+                                            <strong>
+
+                                                {% if review.planning_enquiry %}
+
+                                                    {% if review.planning_enquiry.destination %}
+
+                                                        {{ review.planning_enquiry.destination }}
+
+                                                    {% else %}
+
+                                                        Bespoke trip
+
+                                                    {% endif %}
+
+                                                {% else %}
+
+                                                    {{ review.trip|default:"Travel experience" }}
+
+                                                {% endif %}
+
+                                            </strong>
+
+
+                                            {% if review.planning_enquiry %}
+
+                                                <span>
+
+                                                    Trip enquiry
+                                                    {{ review.planning_enquiry.created_at|date:"M j, Y" }}
+
+                                                </span>
+
+                                            {% else %}
+
+                                                <span>
+
+                                                    Submitted
+                                                    {{ review.created_at|date:"M j, Y" }}
+
+                                                </span>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <!-- PUBLISHED STATUS -->
+
+                                    {% if review.is_published %}
+
+                                        <span class="review-status-badge review-status-live">
+
+                                            <i class="bi bi-check-circle-fill"></i>
+
+                                            Published
+
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="review-status-badge review-status-pending">
+
+                                            <i class="bi bi-clock-fill"></i>
+
+                                            Awaiting approval
+
+                                        </span>
+
+                                    {% endif %}
+
+
+                                </div>
+
+
+
+                                <!-- STARS -->
+
+                                <div class="profile-review-stars">
+
+
+                                    {% for star in review.stars_filled %}
+
+                                        <i class="bi bi-star-fill"></i>
+
+                                    {% endfor %}
+
+
+                                    {% for star in review.stars_empty %}
+
+                                        <i class="bi bi-star"></i>
+
+                                    {% endfor %}
+
+
+                                </div>
+
+
+
+                                <!-- QUOTE -->
+
+                                <p class="profile-review-quote">
+
+                                    "{{ review.quote }}"
+
+                                </p>
+
+
+
+                                <!-- DATE -->
+
+                                <div class="profile-review-date">
+
+                                    Submitted
+                                    {{ review.created_at|date:"M j, Y" }}
+
+                                </div>
+
+
+                            </article>
+
+
+                        {% endfor %}
+
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <!-- NO REVIEWS -->
+
+                    <div class="profile-empty-state">
+
+
+                        <i class="bi bi-chat-square-heart"></i>
+
+
+                        <p>
+
+                            You haven't written a review yet.
+
+                        </p>
+
+
+                        {% if completed_enquiries %}
+
+                            <a
+                                href="{% url 'leave_review' %}"
+                                class="profile-primary-action"
+                            >
+
+                                <i class="bi bi-star"></i>
+
+                                Review a completed trip
+
+                            </a>
+
+                        {% else %}
+
+                            <span class="profile-empty-note">
+
+                                Once one of your trips is completed,
+                                you'll be able to share your experience.
+
+                            </span>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </section>
+
+
+        </div>
+
+
+
+        <!-- ==================================================
+             PROFILE ACTIONS
+        ================================================== -->
+
+        <div class="profile-actions">
+
+
+            <a
+                href="{% url 'planning' %}"
+                class="profile-primary-action"
+            >
+
+                <i class="bi bi-compass"></i>
+
+                Start a new trip
+
+            </a>
+
+
+            <form
+                method="post"
+                action="{% url 'logout' %}"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="profile-logout-btn"
+                >
+
+                    <i class="bi bi-box-arrow-right"></i>
+
+                    Log out
+
+                </button>
+
+            </form>
+
+
+        </div>
+
+
+    </div>
+
+</section>
+
+{% endblock %}

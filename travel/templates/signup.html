@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Sign Up{% endblock %}
+{% block content %}
+
+<div class="planning-section">
+<div class="planning-title reveal">Create your account</div>
+<div class="planning-subtitle reveal">Join to plan tours and share your own reviews.</div>
+
+{% if form.errors %}
+<div class="form-alert-error reveal">
+    <i class="bi bi-exclamation-circle-fill"></i>
+    <div>Please fix the errors below and try again.</div>
+</div>
+{% endif %}
+
+<form method="post" class="planning-form reveal" novalidate>
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<div class="form-help">{{ field.help_text }}</div>{% endif %}
+        {% if field.errors %}<div class="form-error">{{ field.errors.0 }}</div>{% endif %}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-success planning-submit rounded-pill">Sign up</button>
+</form>
+
+<div class="auth-alt-link reveal">
+    Already have an account? <a href="{% url 'login' %}">Log in</a>
+</div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const revealEls = document.querySelectorAll('.reveal');
+        if (!('IntersectionObserver' in window)) {
+            revealEls.forEach(el => el.classList.add('in-view'));
+            return;
+        }
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('in-view');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+        revealEls.forEach(el => observer.observe(el));
+    });
+</script>
+{% endblock %}

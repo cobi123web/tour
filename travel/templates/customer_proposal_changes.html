@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Request Changes | {{ proposal.title }}
+{% endblock %}
+
+{% block content %}
+
+<section class="customer-proposal-changes-page">
+
+    <div class="customer-proposal-changes-container">
+
+        <a
+            href="{% url 'customer_proposal_detail' proposal.id %}"
+            class="customer-proposal-back"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Back to proposal
+        </a>
+
+
+        <div class="customer-proposal-changes-card">
+
+            <div class="customer-proposal-changes-icon">
+                <i class="bi bi-chat-left-text"></i>
+            </div>
+
+
+            <span class="customer-proposal-eyebrow">
+                REQUEST CHANGES
+            </span>
+
+
+            <h1>
+                What would you like us to change?
+            </h1>
+
+
+            <p class="customer-proposal-changes-intro">
+                Tell us what you would like adjusted in your
+                travel proposal. We'll review your request and
+                update the proposal for you.
+            </p>
+
+
+            <div class="customer-proposal-changes-trip">
+
+                <span>YOUR PROPOSAL</span>
+
+                <strong>
+                    {{ proposal.title }}
+                </strong>
+
+                {% if enquiry.destination %}
+                    <small>
+                        {{ enquiry.destination }}
+                    </small>
+                {% endif %}
+
+            </div>
+
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                <div class="customer-proposal-change-field">
+
+                    <label for="change_message">
+                        Your requested changes
+                    </label>
+
+                    <textarea
+                        id="change_message"
+                        name="change_message"
+                        rows="8"
+                        placeholder="For example: I would like to change the hotel to a beachfront property and remove the desert safari."
+                        required
+                    >{{ change_message|default:"" }}</textarea>
+
+                    <small>
+                        Please be as specific as possible so we can
+                        update your proposal accurately.
+                    </small>
+
+                </div>
+
+
+                <div class="customer-proposal-change-actions">
+
+                    <a
+                        href="{% url 'customer_proposal_detail' proposal.id %}"
+                        class="customer-proposal-change-cancel"
+                    >
+                        Cancel
+                    </a>
+
+
+                    <button
+                        type="submit"
+                        class="customer-proposal-change-submit"
+                    >
+                        <i class="bi bi-send"></i>
+                        Send Request
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

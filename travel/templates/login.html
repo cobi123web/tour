@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    Log In | Wanderwell
+{% endblock %}
+
+{% block content %}
+
+<section class="planning-section auth-page">
+
+    <div class="auth-container">
+
+        <div class="planning-title reveal">
+            Welcome back
+        </div>
+
+        <div class="planning-subtitle reveal">
+            Log in to plan a trip, manage your travel plans,
+            or leave a review.
+        </div>
+
+
+        {% if form.errors %}
+
+            <div class="form-alert-error reveal">
+
+                <i class="bi bi-exclamation-circle-fill"></i>
+
+                <div>
+                    Your username or password was incorrect.
+                    Please try again.
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+        {% if next and user.is_authenticated %}
+
+            <div class="form-alert-error reveal">
+
+                <i class="bi bi-exclamation-circle-fill"></i>
+
+                <div>
+                    Your account does not have permission to access
+                    that page.
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+        <form
+            method="post"
+            action="{% url 'login' %}"
+            class="planning-form reveal"
+            novalidate
+        >
+
+            {% csrf_token %}
+
+            <input
+                type="hidden"
+                name="next"
+                value="{{ next|default:'' }}"
+            >
+
+
+            <!-- USERNAME -->
+
+            <div class="form-group">
+
+                <label for="{{ form.username.id_for_label }}">
+                    Username
+                </label>
+
+                {{ form.username }}
+
+                {% if form.username.errors %}
+
+                    <div class="form-error">
+                        {{ form.username.errors.0 }}
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- PASSWORD -->
+
+            <div class="form-group">
+
+                <label for="{{ form.password.id_for_label }}">
+                    Password
+                </label>
+
+                {{ form.password }}
+
+                {% if form.password.errors %}
+
+                    <div class="form-error">
+                        {{ form.password.errors.0 }}
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="btn btn-success planning-submit rounded-pill"
+            >
+                <i class="bi bi-box-arrow-in-right"></i>
+                Log in
+            </button>
+
+        </form>
+
+
+        <div class="auth-alt-link reveal">
+
+            Don't have an account?
+
+            <a href="{% url 'signup' %}">
+                Sign up
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        const revealEls =
+            document.querySelectorAll('.reveal');
+
+
+        if (!('IntersectionObserver' in window)) {
+
+            revealEls.forEach(
+                function (el) {
+
+                    el.classList.add('in-view');
+
+                }
+            );
+
+            return;
+
+        }
+
+
+        const observer =
+            new IntersectionObserver(
+                function (entries) {
+
+                    entries.forEach(
+                        function (entry) {
+
+                            if (entry.isIntersecting) {
+
+                                entry.target.classList.add(
+                                    'in-view'
+                                );
+
+                                observer.unobserve(
+                                    entry.target
+                                );
+
+                            }
+
+                        }
+                    );
+
+                },
+                {
+                    threshold: 0.15
+                }
+            );
+
+
+        revealEls.forEach(
+            function (el) {
+
+                observer.observe(el);
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,476 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Leave a Review
+{% endblock %}
+
+{% block meta_description %}
+Share how your Wanderwell trip went — your review helps other travelers plan with confidence.
+{% endblock %}
+
+
+{% block content %}
+
+
+<!-- ==========================================================
+     HERO
+     ========================================================== -->
+
+<div
+    class="travel-hero"
+    style="background-image: url('{% static 'travel/IMAGE/travel-hero.png' %}');"
+>
+
+    <div class="hero-text">
+
+        <div class="hero-title">
+
+            <span>
+
+                <img
+                    src="{% static 'travel/IMAGE/airplane-mode.png' %}"
+                    alt=""
+                    class="plane-icon"
+                >
+
+            </span>
+
+            BESPOKE TRAVEL PLANNING
+
+        </div>
+
+
+        <div class="hero-subtitle">
+
+            Tell us how it went
+
+        </div>
+
+
+        <div class="hero-description">
+
+            Your review helps other travelers plan with confidence
+            — and helps us keep getting better.
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ==========================================================
+     REVIEW SECTION
+     ========================================================== -->
+
+<div class="planning-section">
+
+
+    <div class="planning-title reveal">
+
+        Share your experience
+
+    </div>
+
+
+    <div class="planning-subtitle reveal">
+
+        Tell us about one of your completed Wanderwell trips.
+        Reviews are checked before they go live.
+
+    </div>
+
+
+    <!-- ======================================================
+         MESSAGES
+         ====================================================== -->
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div class="planning-success reveal">
+
+                {% if message.tags == 'error' %}
+
+                    <i class="bi bi-exclamation-circle-fill"></i>
+
+                {% else %}
+
+                    <i class="bi bi-check-circle-fill"></i>
+
+                {% endif %}
+
+
+                <div>
+
+                    <div class="planning-success-title">
+
+                        {{ message }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <!-- ======================================================
+         COMPLETED TRIPS AVAILABLE
+         ====================================================== -->
+
+    {% if completed_enquiries %}
+
+
+        <form
+            method="post"
+            class="planning-form reveal"
+            novalidate
+        >
+
+            {% csrf_token %}
+
+
+            <!-- ==================================================
+                 SELECT TRIP
+                 ================================================== -->
+
+            <div class="form-group">
+
+                <label
+                    for="planning_enquiry"
+                >
+
+                    Which trip are you reviewing? *
+
+                </label>
+
+
+                <select
+                    name="planning_enquiry"
+                    id="planning_enquiry"
+                    class="form-control"
+                    required
+                >
+
+                    <option value="">
+
+                        Select a completed trip
+
+                    </option>
+
+
+                    {% for enquiry in completed_enquiries %}
+
+                        <option
+                            value="{{ enquiry.id }}"
+                        >
+
+                            {% if enquiry.destination %}
+
+                                {{ enquiry.destination }}
+
+                            {% else %}
+
+                                Bespoke trip
+
+                            {% endif %}
+
+                            — {{ enquiry.created_at|date:"M j, Y" }}
+
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- ==================================================
+                 REVIEW FORM
+                 ================================================== -->
+
+            {% for field in form %}
+
+                {% if field.name != 'name' %}
+
+                    <div class="form-group">
+
+                        <label
+                            for="{{ field.id_for_label }}"
+                        >
+
+                            {{ field.label }}
+
+                            {% if field.field.required %}
+                                *
+                            {% endif %}
+
+                        </label>
+
+
+                        {{ field }}
+
+
+                        {% if field.help_text %}
+
+                            <small class="form-help-text">
+
+                                {{ field.help_text }}
+
+                            </small>
+
+                        {% endif %}
+
+
+                        {% if field.errors %}
+
+                            <div class="form-error">
+
+                                {{ field.errors.0 }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+
+            <!-- ==================================================
+                 NAME
+                 ================================================== -->
+
+            <input
+                type="hidden"
+                name="name"
+                value="{{ request.user.username }}"
+            >
+
+
+            <!-- ==================================================
+                 SUBMIT
+                 ================================================== -->
+
+            <button
+                type="submit"
+                class="btn btn-success planning-submit rounded-pill"
+            >
+
+                <i class="bi bi-send"></i>
+
+                Submit review
+
+            </button>
+
+        </form>
+
+
+    {% else %}
+
+
+        <!-- ==================================================
+             NO COMPLETED TRIPS
+             ================================================== -->
+
+        <div class="planning-success reveal">
+
+            <i class="bi bi-info-circle-fill"></i>
+
+
+            <div>
+
+                <div class="planning-success-title">
+
+                    No completed trips yet
+
+                </div>
+
+
+                <div class="planning-success-text">
+
+                    You can leave a review once one of your
+                    Wanderwell planning enquiries has been
+                    marked as completed.
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            class="review-card review-card-preview reveal"
+            style="margin-top: 25px;"
+        >
+
+            <div class="review-stars">
+
+                <i class="bi bi-star"></i>
+
+                <i class="bi bi-star"></i>
+
+                <i class="bi bi-star"></i>
+
+                <i class="bi bi-star"></i>
+
+                <i class="bi bi-star"></i>
+
+            </div>
+
+
+            <div class="review-quote">
+
+                Once you've completed your trip,
+                come back here and share your experience
+                with other travelers.
+
+            </div>
+
+
+            <div class="review-author">
+
+                <div class="review-avatar">
+
+                    {{ request.user.username|first|upper }}
+
+                </div>
+
+
+                <div class="review-author-info">
+
+                    <div class="review-name">
+
+                        {{ request.user.username }}
+
+                    </div>
+
+
+                    <div class="review-trip">
+
+                        Your Wanderwell journey
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            style="
+                text-align:center;
+                margin-top:30px;
+            "
+        >
+
+            <a
+                href="{% url 'profile' %}"
+                class="btn btn-success rounded-pill"
+            >
+
+                <i class="bi bi-person"></i>
+
+                Back to profile
+
+            </a>
+
+        </div>
+
+
+    {% endif %}
+
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        const revealEls =
+            document.querySelectorAll('.reveal');
+
+
+        if (
+            !('IntersectionObserver' in window)
+        ) {
+
+            revealEls.forEach(
+                function (el) {
+
+                    el.classList.add(
+                        'in-view'
+                    );
+
+                }
+            );
+
+            return;
+
+        }
+
+
+        const observer =
+            new IntersectionObserver(
+                function (entries) {
+
+                    entries.forEach(
+                        function (entry) {
+
+                            if (
+                                entry.isIntersecting
+                            ) {
+
+                                entry.target.classList.add(
+                                    'in-view'
+                                );
+
+                                observer.unobserve(
+                                    entry.target
+                                );
+
+                            }
+
+                        }
+                    );
+
+                },
+                {
+                    threshold: 0.15
+                }
+            );
+
+
+        revealEls.forEach(
+            function (el) {
+
+                observer.observe(el);
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

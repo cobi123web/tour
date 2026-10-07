@@ -1,0 +1,436 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+    {{ proposal.title }} | Wanderwell
+{% endblock %}
+
+{% block content %}
+
+<section class="customer-proposal-page">
+
+    <div class="customer-proposal-container">
+
+        <!-- BACK LINK -->
+
+        <a
+            href="{% url 'profile' %}"
+            class="customer-proposal-back"
+        >
+            <i class="bi bi-arrow-left"></i>
+            Back to profile
+        </a>
+
+
+        <!-- HEADER -->
+
+        <header class="customer-proposal-header">
+
+            <div>
+
+                <span class="customer-proposal-eyebrow">
+                    YOUR WANDERWELL PROPOSAL
+                </span>
+
+                <h1>
+                    {{ proposal.title }}
+                </h1>
+
+                {% if enquiry.destination %}
+                    <p>
+                        <i class="bi bi-geo-alt"></i>
+                        {{ enquiry.destination }}
+                    </p>
+                {% endif %}
+
+            </div>
+
+
+            <div class="customer-proposal-status
+                customer-proposal-status-{{ proposal.status }}">
+
+                {{ proposal.get_status_display }}
+
+            </div>
+
+        </header>
+
+
+        <!-- TRIP SUMMARY -->
+
+        <div class="customer-proposal-summary">
+
+            <div class="customer-proposal-summary-item">
+
+                <i class="bi bi-geo-alt"></i>
+
+                <div>
+                    <span>Destination</span>
+
+                    <strong>
+                        {{ enquiry.destination|default:"Not specified" }}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="customer-proposal-summary-item">
+
+                <i class="bi bi-calendar3"></i>
+
+                <div>
+                    <span>Travel dates</span>
+
+                    <strong>
+                        {{ enquiry.travel_dates|default:"Flexible" }}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="customer-proposal-summary-item">
+
+                <i class="bi bi-people"></i>
+
+                <div>
+                    <span>Travellers</span>
+
+                    <strong>
+                        {{ enquiry.travellers }}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="customer-proposal-summary-item">
+
+                <i class="bi bi-stars"></i>
+
+                <div>
+                    <span>Travel style</span>
+
+                    <strong>
+                        {{ enquiry.get_travel_style_display }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        {% if proposal.description %}
+
+        <article class="customer-proposal-card">
+
+            <div class="customer-proposal-card-heading">
+
+                <div class="customer-proposal-card-icon">
+                    <i class="bi bi-file-text"></i>
+                </div>
+
+                <div>
+                    <h2>
+                        About your trip
+                    </h2>
+
+                    <p>
+                        Your personalised travel proposal.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="customer-proposal-description">
+
+                {{ proposal.description|linebreaks }}
+
+            </div>
+
+        </article>
+
+        {% endif %}
+
+
+        <!-- ITINERARY -->
+
+        {% if proposal.itinerary %}
+
+        <article class="customer-proposal-card">
+
+            <div class="customer-proposal-card-heading">
+
+                <div class="customer-proposal-card-icon">
+                    <i class="bi bi-map"></i>
+                </div>
+
+                <div>
+                    <h2>
+                        Your itinerary
+                    </h2>
+
+                    <p>
+                        The journey we've planned for you.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="customer-proposal-itinerary">
+
+                {{ proposal.itinerary|linebreaks }}
+
+            </div>
+
+        </article>
+
+        {% endif %}
+
+
+        <!-- PRICE -->
+
+        <article class="customer-proposal-card">
+
+            <div class="customer-proposal-card-heading">
+
+                <div class="customer-proposal-card-icon">
+                    <i class="bi bi-wallet2"></i>
+                </div>
+
+                <div>
+                    <h2>
+                        Trip investment
+                    </h2>
+
+                    <p>
+                        A breakdown of your proposed trip cost.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="customer-proposal-pricing">
+
+                <div class="customer-proposal-price-row">
+                    <span>Flights</span>
+
+                    <strong>
+                        {{ enquiry.currency|default:"₦" }}
+                        {{ proposal.flight_cost|floatformat:2 }}
+                    </strong>
+                </div>
+
+
+                <div class="customer-proposal-price-row">
+                    <span>Accommodation</span>
+
+                    <strong>
+                        {{ enquiry.currency|default:"₦" }}
+                        {{ proposal.accommodation_cost|floatformat:2 }}
+                    </strong>
+                </div>
+
+
+                <div class="customer-proposal-price-row">
+                    <span>Transport</span>
+
+                    <strong>
+                        {{ enquiry.currency|default:"₦" }}
+                        {{ proposal.transport_cost|floatformat:2 }}
+                    </strong>
+                </div>
+
+
+                <div class="customer-proposal-price-row">
+                    <span>Activities</span>
+
+                    <strong>
+                        {{ enquiry.currency|default:"₦" }}
+                        {{ proposal.activities_cost|floatformat:2 }}
+                    </strong>
+                </div>
+
+
+                <div class="customer-proposal-price-row">
+                    <span>Other costs</span>
+
+                    <strong>
+                        {{ enquiry.currency|default:"₦" }}
+                        {{ proposal.other_cost|floatformat:2 }}
+                    </strong>
+                </div>
+
+
+                <div class="customer-proposal-price-divider"></div>
+
+
+                <div class="customer-proposal-price-row">
+                    <span>Trip cost</span>
+
+                    <strong>
+                        {{ enquiry.currency|default:"₦" }}
+                        {{ proposal.trip_cost|floatformat:2 }}
+                    </strong>
+                </div>
+
+
+                <div class="customer-proposal-price-row">
+                    <span>Wanderwell service fee</span>
+
+                    <strong>
+                        {{ enquiry.currency|default:"₦" }}
+                        {{ proposal.service_fee|floatformat:2 }}
+                    </strong>
+                </div>
+
+
+                <div class="customer-proposal-total">
+
+                    <span>
+                        Total
+                    </span>
+
+                    <strong>
+                        {{ enquiry.currency|default:"₦" }}
+                        {{ proposal.total_cost|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </article>
+
+
+        <!-- EXPIRY -->
+
+        {% if proposal.expires_at %}
+
+        <div class="customer-proposal-expiry">
+
+            <i class="bi bi-clock"></i>
+
+            <div>
+
+                <span>
+                    PROPOSAL VALID UNTIL
+                </span>
+
+                <strong>
+                    {{ proposal.expires_at|date:"F d, Y \a\t g:i A" }}
+                </strong>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- CUSTOMER ACTIONS -->
+
+        {% if proposal.status == 'sent' or proposal.status == 'viewed' %}
+
+        <div class="customer-proposal-actions">
+
+            <form
+                method="post"
+                action="{% url 'customer_proposal_accept' proposal.id %}"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="customer-proposal-accept"
+                >
+                    <i class="bi bi-check-circle"></i>
+                    Accept Proposal
+                </button>
+
+            </form>
+
+
+            <a
+                href="{% url 'customer_proposal_changes' proposal.id %}"
+                class="customer-proposal-changes"
+            >
+                <i class="bi bi-chat-left-text"></i>
+                Request Changes
+            </a>
+
+        </div>
+
+        {% endif %}
+
+
+        {% if proposal.status == 'accepted' %}
+
+        <div class="customer-proposal-result customer-proposal-result-success">
+
+            <div class="customer-proposal-result-icon">
+                <i class="bi bi-check-lg"></i>
+            </div>
+
+            <div>
+
+                <span>
+                    PROPOSAL ACCEPTED
+                </span>
+
+                <h2>
+                    Your trip is moving forward
+                </h2>
+
+                <p>
+                    Thank you for accepting your Wanderwell proposal.
+                    We'll be in touch with the next steps.
+                </p>
+
+            </div>
+
+        </div>
+
+        {% elif proposal.status == 'changes_requested' %}
+
+        <div class="customer-proposal-result customer-proposal-result-changes">
+
+            <div class="customer-proposal-result-icon">
+                <i class="bi bi-chat-dots"></i>
+            </div>
+
+            <div>
+
+                <span>
+                    CHANGES REQUESTED
+                </span>
+
+                <h2>
+                    We've received your request
+                </h2>
+
+                <p>
+                    Wanderwell will review your requested changes
+                    and update your proposal.
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+</section>
+
+{% endblock %}

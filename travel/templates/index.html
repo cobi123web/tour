@@ -1,0 +1,1141 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<div>
+
+    <div class="travel-hero"
+         style="background-image: url('{% static 'travel/IMAGE/travel-hero.png' %}');">
+
+        <div class="hero-text">
+
+            <div class="hero-title">
+
+                <span>
+                    <img
+                        src="{% static 'travel/IMAGE/airplane-mode.png' %}"
+                        alt=""
+                        class="plane-icon">
+                </span>
+
+                BESPOKE TRAVEL PLANNING
+
+            </div>
+
+            <div class="hero-subtitle">
+                Tours built around the way you travel
+            </div>
+
+            <div class="hero-description">
+                Wanderwell crafts bespoke journeys end to end —
+                expert local planning, honest guidance, and seamless
+                support from the first idea to the road.
+            </div>
+
+            <div class="hero-buttons">
+
+                <a
+                    href="{% url 'tours' %}"
+                    class="hero-browse-button btn btn-light text-dark rounded-pill"
+                >
+                    Browse our tours
+                </a>
+
+                <a
+                    href="{% url 'planning' %}"
+                    class="hero-plan-button btn rounded-pill text-light"
+                >
+                    Start planning
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     TRUST BAR
+     ===================================================== -->
+
+<div class="trust-bar">
+
+    <div class="trust-item reveal">
+
+        <i class="bi bi-suitcase2"></i>
+
+        <div class="trust-number">
+            500+
+        </div>
+
+        <div class="trust-label">
+            Trips planned
+        </div>
+
+    </div>
+
+
+    <div class="trust-item reveal">
+
+        <i class="bi bi-globe-americas"></i>
+
+        <div class="trust-number">
+            40+
+        </div>
+
+        <div class="trust-label">
+            Countries covered
+        </div>
+
+    </div>
+
+
+    <div class="trust-item reveal">
+
+        <i class="bi bi-star-fill"></i>
+
+        <div class="trust-number">
+            4.9/5
+        </div>
+
+        <div class="trust-label">
+            Average traveler rating
+        </div>
+
+    </div>
+
+
+    <div class="trust-item reveal">
+
+        <i class="bi bi-headset"></i>
+
+        <div class="trust-number">
+            24/7
+        </div>
+
+        <div class="trust-label">
+            Traveler support
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     FEATURED DESTINATIONS
+     ===================================================== -->
+
+<div class="featured-destinations">
+
+    <div class="featured-title reveal">
+        Where will you go next?
+    </div>
+
+    <div class="featured-subtitle reveal">
+        Hand-picked places we know and love, planned by locals who live there.
+    </div>
+
+
+    <a
+        href="{% url 'destinations' %}"
+        class="all-destinations btn border-success mt-3"
+    >
+        Explore all destinations
+    </a>
+
+
+    <div class="destinations1">
+
+        {% for destination in destinations %}
+
+            <div class="destinations reveal">
+
+                <div>
+                    <img
+                        src="{{ destination.image.url }}"
+                        alt="{{ destination.city }}, {{ destination.country }}"
+                    >
+                </div>
+
+                <div class="city">
+                    {{ destination.city }}
+                </div>
+
+                <div class="country">
+                    {{ destination.country }}
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     SIGNATURE TOURS
+     ===================================================== -->
+
+<div class="signature-tours">
+
+    <div class="signature-title reveal">
+        Tours we love to plan
+    </div>
+
+    <div class="signature-subtitle reveal">
+        Every trip is built from scratch for you — these are a few
+        of the journeys our travelers most often ask for.
+    </div>
+
+
+    <div class="tours">
+
+        {% for tour in tours %}
+
+            <div class="tour-card reveal">
+
+                <div>
+
+                    <img
+                        src="{{ tour.image.url }}"
+                        alt="{{ tour.headlights }}"
+                        class="tour-image"
+                    >
+
+                </div>
+
+
+                <div class="tour-headlights">
+                    {{ tour.headlights }}
+                </div>
+
+
+                <div class="tour-descript">
+                    {{ tour.description }}
+                </div>
+
+
+                <!--
+                    STAGE 1 FIX:
+                    Send the tour PRIMARY KEY instead of the
+                    tour name/headlights.
+
+                    planning() expects:
+                    ?tour=<tour id>
+                -->
+
+                <a
+                    href="{% url 'planning' %}?tour={{ tour.id }}"
+                    class="btn btn-success tour-plan-button rounded-pill"
+                >
+                    Plan this tour
+                </a>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <a
+        href="{% url 'tours' %}"
+        class="btn border-success text-success all-tours"
+    >
+        See all tours
+    </a>
+
+</div>
+
+
+<!-- =====================================================
+     WHY WANDERWELL
+     ===================================================== -->
+
+<div class="why-section">
+
+    <div class="why-title reveal">
+        Travel planned with you in mind
+    </div>
+
+    <div class="why-subtitle reveal">
+        We design trips the way you'd design them yourself —
+        if you had years of local knowledge and a whole team behind you.
+    </div>
+
+
+    <div class="reason">
+
+        <div class="index-reason-detail">
+
+
+            <div class="reveal">
+
+                <div>
+                    <img
+                        src="{% static 'travel/IMAGE/compass3.png' %}"
+                        alt=""
+                    >
+                </div>
+
+                <div class="index-reason-title">
+                    Local expertise
+                </div>
+
+                <div class="index-reason-subtitle">
+                    Plans built on real local knowledge from people
+                    who live there — not guidebook clichés.
+                </div>
+
+            </div>
+
+
+            <div class="reveal">
+
+                <div>
+                    <img
+                        src="{% static 'travel/IMAGE/filter.png' %}"
+                        alt=""
+                    >
+                </div>
+
+                <div class="index-reason-title">
+                    Fully personalized
+                </div>
+
+                <div class="index-reason-subtitle">
+                    Every itinerary tailored to your pace,
+                    tastes, and way of traveling.
+                </div>
+
+            </div>
+
+
+            <div class="reveal">
+
+                <div>
+                    <img
+                        src="{% static 'travel/IMAGE/support.png' %}"
+                        alt=""
+                    >
+                </div>
+
+                <div class="index-reason-title">
+                    End-to-end support
+                </div>
+
+                <div class="index-reason-subtitle">
+                    One point of contact from first idea to trip home,
+                    with help whenever you need it on the road.
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     REVIEWS
+     ===================================================== -->
+
+<div class="reviews-section">
+
+    <div class="reviews-title reveal">
+        What our travelers say
+    </div>
+
+    <div class="reviews-subtitle reveal">
+        Real trips, planned start to finish — in their own words.
+    </div>
+
+
+    <div class="reviews-cta reveal">
+
+        {% if user.is_authenticated %}
+
+            <div class="reviews-user-badge">
+
+                <i class="bi bi-person-circle"></i>
+
+                <span class="reviews-user-name">
+                    {{ user.username }}
+                </span>
+
+            </div>
+
+
+            <a
+                href="{% url 'leave_review' %}"
+                class="btn border-success text-success"
+            >
+                Share your experience
+            </a>
+
+        {% else %}
+
+            <a
+                href="{% url 'login' %}"
+                class="btn border-success text-success"
+            >
+                Log in to share your experience
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="review-results reveal">
+
+        <div class="review-result-item">
+
+            <div
+                class="review-result-number"
+                data-stat="average"
+            >
+
+                {% if review_stats.average_rating %}
+                    {{ review_stats.average_rating|floatformat:1 }}/5
+                {% else %}
+                    —
+                {% endif %}
+
+            </div>
+
+            <div class="review-result-label">
+                Average rating
+            </div>
+
+        </div>
+
+
+        <div class="review-result-item">
+
+            <div
+                class="review-result-number"
+                data-stat="total"
+            >
+                {{ review_stats.total }}
+            </div>
+
+            <div class="review-result-label">
+                Traveler reviews
+            </div>
+
+        </div>
+
+
+        <div class="review-result-item">
+
+            <div
+                class="review-result-number"
+                data-stat="recommend"
+            >
+
+                {% if review_stats.recommend_pct %}
+                    {{ review_stats.recommend_pct }}%
+                {% else %}
+                    —
+                {% endif %}
+
+            </div>
+
+            <div class="review-result-label">
+                Would recommend
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="reviews">
+
+        {% for review in reviews %}
+
+            <div
+                class="review-card reveal in-view"
+                data-review-id="{{ review.id }}"
+            >
+
+                <div class="review-stars">
+
+                    {% for _ in review.stars_filled %}
+                        <i class="bi bi-star-fill"></i>
+                    {% endfor %}
+
+                    {% for _ in review.stars_empty %}
+                        <i class="bi bi-star"></i>
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="review-quote">
+                    {{ review.quote }}
+                </div>
+
+
+                <div class="review-author">
+
+                    <div class="review-avatar">
+                        {{ review.initials }}
+                    </div>
+
+
+                    <div class="review-author-info">
+
+                        <div class="review-name">
+                            {{ review.name }}
+                        </div>
+
+
+                        {% if review.trip %}
+
+                            <div class="review-trip">
+                                {{ review.trip }}
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                {% if not review.is_published %}
+
+                    <div class="review-pending-badge">
+                        Pending approval
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+        {% empty %}
+
+            <div class="reviews-empty reveal">
+                Be the first traveler to leave a review.
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     PLANNING STEPS
+     ===================================================== -->
+
+<div class="plan-section">
+
+    <div class="plan-title reveal">
+        Planning made simple
+    </div>
+
+    <div class="plan-subtitle reveal">
+        Three clear steps between you and the trip of your dreams.
+    </div>
+
+
+    <div class="plan-steps">
+
+        <div class="plan-step-circle1 px-auto">
+            1
+        </div>
+
+        <div class="plan-step-line1"></div>
+
+        <div class="plan-step-circle1 px-auto">
+            2
+        </div>
+
+        <div class="plan-step-line1"></div>
+
+        <div class="plan-step-circle1 px-auto">
+            3
+        </div>
+
+        <div class="plan-step-line1"></div>
+
+    </div>
+
+
+    <div class="plan-steps-details">
+
+
+        <div class="step-details reveal">
+
+            <div class="step-title">
+                Tell us how you travel
+            </div>
+
+            <div class="step-subtitle">
+                Share your dates, budget, and travel style in a short
+                call or form — no strings attached.
+            </div>
+
+        </div>
+
+
+        <div class="reveal">
+
+            <div class="step-title">
+                We craft your itinerary
+            </div>
+
+            <div class="step-subtitle">
+                A local expert builds a day-by-day plan around you,
+                refined together until it feels right.
+            </div>
+
+        </div>
+
+
+        <div class="reveal">
+
+            <div class="step-title">
+                You explore, we're there
+            </div>
+
+            <div class="step-subtitle">
+                Travel with confidence — your full plan in hand
+                and a real person to reach whenever you need.
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <a
+        href="{% url 'planning' %}"
+        class="btn btn-success plan-button"
+    >
+        Start Planning
+    </a>
+
+</div>
+
+
+<!-- =====================================================
+     FAQ
+     ===================================================== -->
+
+<div class="frequent-section">
+
+    <div class="frequent-title reveal">
+        Questions, answered
+    </div>
+
+    <div class="frequent-subtitle reveal">
+        The things travelers ask us most before booking.
+    </div>
+
+
+    <div class="faq">
+
+        <div class="frequent-line"></div>
+
+
+        {% for frequent in frequents %}
+
+            <div
+                class="frequent-question"
+                onclick="toggleFaq(this)"
+            >
+
+                {{ frequent.questions }}
+
+                <div class="down-arrow">
+                    <i class="bi bi-chevron-compact-down"></i>
+                </div>
+
+                <div class="up-arrow">
+                    <i class="bi bi-chevron-compact-up"></i>
+                </div>
+
+            </div>
+
+
+            <div class="frequent-answers">
+                {{ frequent.answers }}
+            </div>
+
+
+            <div class="frequent-line"></div>
+
+        {% endfor %}
+
+    </div>
+
+
+    <div class="questiion">
+
+        <div class="question-title">
+            Still have questions?
+        </div>
+
+        <div class="question-subtitle">
+            Send us a note and a real travel expert will get back to you.
+        </div>
+
+        <a
+            href="mailto:hello@wanderwell.example"
+            class="contact btn"
+        >
+            Contact us
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     FINAL CTA
+     ===================================================== -->
+
+<div
+    style="background-image: url('{% static 'travel/IMAGE/plan-dessert-image.png' %}')"
+    class="plan-dessert-image"
+>
+
+    <div class="plan-dessert-text">
+
+        <div class="plan-dessert-title">
+            READY WHEN YOU ARE
+        </div>
+
+        <div class="plan-dessert-subtitle">
+            Your next journey starts here
+        </div>
+
+        <div class="plan-dessert-description">
+            Tell us where you're dreaming of, and we'll take it from there —
+            a real conversation, no obligation.
+        </div>
+
+        <a
+            href="{% url 'planning' %}"
+            class="start-plan-button btn border rounded-pill"
+        >
+            Start planning today
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+    // =====================================================
+    // FAQ ACCORDION
+    // =====================================================
+
+    function toggleFaq(questionEl) {
+
+        const answer = questionEl.nextElementSibling;
+
+        questionEl.classList.toggle('open');
+
+        if (
+            answer &&
+            answer.classList.contains('frequent-answers')
+        ) {
+
+            answer.classList.toggle('open');
+
+        }
+
+    }
+
+
+    // =====================================================
+    // SCROLL REVEAL
+    // =====================================================
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const revealEls =
+            document.querySelectorAll('.reveal');
+
+
+        if (!('IntersectionObserver' in window)) {
+
+            revealEls.forEach(function (element) {
+
+                element.classList.add('in-view');
+
+            });
+
+            return;
+
+        }
+
+
+        const observer =
+            new IntersectionObserver(
+                function (entries) {
+
+                    entries.forEach(function (entry) {
+
+                        if (entry.isIntersecting) {
+
+                            entry.target.classList.add('in-view');
+
+                            observer.unobserve(entry.target);
+
+                        }
+
+                    });
+
+                },
+                {
+                    threshold: 0.15
+                }
+            );
+
+
+        revealEls.forEach(function (element) {
+
+            observer.observe(element);
+
+        });
+
+    });
+
+
+    // =====================================================
+    // LIVE REVIEW FEED
+    // =====================================================
+
+    (function () {
+
+        const reviewsGrid =
+            document.querySelector('.reviews');
+
+
+        if (!reviewsGrid) {
+            return;
+        }
+
+
+        const knownReviewIds =
+            new Set(
+                Array.from(
+                    reviewsGrid.querySelectorAll(
+                        '.review-card[data-review-id]'
+                    )
+                )
+                .map(function (element) {
+                    return element.dataset.reviewId;
+                })
+            );
+
+
+        function escapeHtml(str) {
+
+            const div =
+                document.createElement('div');
+
+            div.textContent = str || '';
+
+            return div.innerHTML;
+
+        }
+
+
+        function starsHtml(rating) {
+
+            let html = '';
+
+
+            for (
+                let i = 0;
+                i < rating;
+                i++
+            ) {
+
+                html +=
+                    '<i class="bi bi-star-fill"></i>';
+
+            }
+
+
+            for (
+                let i = rating;
+                i < 5;
+                i++
+            ) {
+
+                html +=
+                    '<i class="bi bi-star"></i>';
+
+            }
+
+
+            return html;
+
+        }
+
+
+        function buildReviewCard(review) {
+
+            const card =
+                document.createElement('div');
+
+
+            card.className =
+                'review-card reveal in-view review-card-new';
+
+
+            card.dataset.reviewId =
+                review.id;
+
+
+            card.innerHTML =
+
+                '<div class="review-stars">' +
+
+                    starsHtml(review.rating) +
+
+                '</div>' +
+
+
+                '<div class="review-quote">' +
+
+                    escapeHtml(review.quote) +
+
+                '</div>' +
+
+
+                '<div class="review-author">' +
+
+                    '<div class="review-avatar">' +
+
+                        escapeHtml(review.initials) +
+
+                    '</div>' +
+
+
+                    '<div class="review-author-info">' +
+
+                        '<div class="review-name">' +
+
+                            escapeHtml(review.name) +
+
+                        '</div>' +
+
+
+                        (
+                            review.trip
+
+                            ?
+
+                            '<div class="review-trip">' +
+                                escapeHtml(review.trip) +
+                            '</div>'
+
+                            :
+
+                            ''
+                        ) +
+
+                    '</div>' +
+
+                '</div>' +
+
+
+                (
+                    review.is_published === false
+
+                    ?
+
+                    '<div class="review-pending-badge">' +
+                        'Pending approval' +
+                    '</div>'
+
+                    :
+
+                    ''
+                );
+
+
+            return card;
+
+        }
+
+
+        function updateResultsStrip(stats) {
+
+            const avgEl =
+                document.querySelector(
+                    '[data-stat="average"]'
+                );
+
+
+            const totalEl =
+                document.querySelector(
+                    '[data-stat="total"]'
+                );
+
+
+            const recEl =
+                document.querySelector(
+                    '[data-stat="recommend"]'
+                );
+
+
+            if (avgEl) {
+
+                avgEl.textContent =
+                    stats.average_rating
+
+                    ?
+
+                    Number(
+                        stats.average_rating
+                    ).toFixed(1) + '/5'
+
+                    :
+
+                    '—';
+
+            }
+
+
+            if (totalEl) {
+
+                totalEl.textContent =
+                    stats.total;
+
+            }
+
+
+            if (recEl) {
+
+                recEl.textContent =
+                    stats.recommend_pct
+
+                    ?
+
+                    stats.recommend_pct + '%'
+
+                    :
+
+                    '—';
+
+            }
+
+        }
+
+
+        function pollReviews() {
+
+            fetch("{% url 'reviews_feed' %}")
+
+                .then(function (response) {
+
+                    return response.json();
+
+                })
+
+                .then(function (data) {
+
+                    let hasNew = false;
+
+
+                    data.reviews.forEach(
+                        function (review) {
+
+                            const idStr =
+                                String(review.id);
+
+
+                            if (
+                                !knownReviewIds.has(idStr)
+                            ) {
+
+                                knownReviewIds.add(idStr);
+
+                                hasNew = true;
+
+
+                                const emptyMsg =
+                                    reviewsGrid.querySelector(
+                                        '.reviews-empty'
+                                    );
+
+
+                                if (emptyMsg) {
+                                    emptyMsg.remove();
+                                }
+
+
+                                reviewsGrid.prepend(
+                                    buildReviewCard(review)
+                                );
+
+                            }
+
+                        }
+                    );
+
+
+                    if (hasNew) {
+
+                        updateResultsStrip(
+                            data.stats
+                        );
+
+                    }
+
+                })
+
+                .catch(function () {
+
+                    /*
+                     * Fail silently.
+                     * The next polling cycle will retry.
+                     */
+
+                });
+
+        }
+
+
+        setInterval(
+            pollReviews,
+            20000
+        );
+
+    })();
+
+</script>
+
+{% endblock %}

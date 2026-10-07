@@ -1,0 +1,287 @@
+{% extends "base.html" %}
+
+{% block title %}
+    My Travel Plan | Wanderwell
+{% endblock %}
+
+{% block content %}
+
+<section class="customer-enquiry-page">
+
+    <div class="customer-enquiry-container">
+
+        <a href="{% url 'profile' %}" class="customer-back-link">
+            <i class="bi bi-arrow-left"></i>
+            Back to profile
+        </a>
+
+        <div class="customer-enquiry-header">
+
+            <div>
+                <span class="customer-enquiry-eyebrow">
+                    YOUR TRAVEL PLAN
+                </span>
+
+                <h1>
+                    {% if enquiry.destination %}
+                        {{ enquiry.destination }}
+                    {% else %}
+                        Travel planning enquiry
+                    {% endif %}
+                </h1>
+
+                <p>
+                    Submitted
+                    {{ enquiry.created_at|date:"F d, Y" }}
+                </p>
+            </div>
+
+            <span class="customer-status customer-status-{{ enquiry.status }}">
+                {{ enquiry.get_status_display }}
+            </span>
+
+        </div>
+
+
+        <!-- Journey -->
+
+        <div class="customer-journey">
+
+            <div class="customer-journey-step
+                {% if enquiry.status == 'new' or enquiry.status == 'contacted' or enquiry.status == 'completed' %}
+                    is-complete
+                {% endif %}
+            ">
+                <div class="customer-journey-icon">
+                    <i class="bi bi-send"></i>
+                </div>
+
+                <span>Enquiry sent</span>
+            </div>
+
+
+            <div class="customer-journey-line"></div>
+
+
+            <div class="customer-journey-step
+                {% if enquiry.status == 'contacted' or enquiry.status == 'completed' %}
+                    is-complete
+                {% endif %}
+            ">
+                <div class="customer-journey-icon">
+                    <i class="bi bi-chat-dots"></i>
+                </div>
+
+                <span>We're in touch</span>
+            </div>
+
+
+            <div class="customer-journey-line"></div>
+
+
+            <div class="customer-journey-step
+                {% if enquiry.status == 'completed' %}
+                    is-complete
+                {% endif %}
+            ">
+                <div class="customer-journey-icon">
+                    <i class="bi bi-check-lg"></i>
+                </div>
+
+                <span>Trip planned</span>
+            </div>
+
+        </div>
+
+
+        <!-- Trip details -->
+
+        <div class="customer-enquiry-card">
+
+            <div class="customer-card-heading">
+                <i class="bi bi-airplane"></i>
+
+                <div>
+                    <h2>Trip details</h2>
+                    <p>
+                        The information you provided when planning your trip.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="customer-detail-grid">
+
+                <div class="customer-detail">
+                    <span>Destination</span>
+                    <strong>
+                        {{ enquiry.destination|default:"Not specified" }}
+                    </strong>
+                </div>
+
+                <div class="customer-detail">
+                    <span>Travel dates</span>
+                    <strong>
+                        {{ enquiry.travel_dates|default:"Flexible" }}
+                    </strong>
+                </div>
+
+                <div class="customer-detail">
+                    <span>Travellers</span>
+                    <strong>
+                        {{ enquiry.travellers }}
+                    </strong>
+                </div>
+
+                <div class="customer-detail">
+                    <span>Travel style</span>
+                    <strong>
+                        {{ enquiry.get_travel_style_display }}
+                    </strong>
+                </div>
+
+                <div class="customer-detail">
+                    <span>Budget</span>
+                    <strong>
+                        {% if enquiry.budget %}
+                            {{ enquiry.currency }}
+                            {{ enquiry.budget|floatformat:2 }}
+                        {% else %}
+                            Not specified
+                        {% endif %}
+                    </strong>
+                </div>
+
+                <div class="customer-detail">
+                    <span>Contact email</span>
+                    <strong>
+                        {{ enquiry.email }}
+                    </strong>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        {% if enquiry.message %}
+
+        <div class="customer-enquiry-card">
+
+            <div class="customer-card-heading">
+                <i class="bi bi-chat-left-text"></i>
+
+                <div>
+                    <h2>Your message</h2>
+                    <p>
+                        What you told us about the trip you have in mind.
+                    </p>
+                </div>
+            </div>
+
+            <div class="customer-message">
+                {{ enquiry.message|linebreaks }}
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- Next step -->
+
+        <div class="customer-next-step">
+
+            {% if enquiry.status == 'new' %}
+
+                <div class="customer-next-icon">
+                    <i class="bi bi-hourglass-split"></i>
+                </div>
+
+                <div>
+                    <span>NEXT STEP</span>
+
+                    <h2>
+                        We're reviewing your trip
+                    </h2>
+
+                    <p>
+                        Your enquiry has been received. We'll review
+                        your destination, dates and budget and get
+                        back to you.
+                    </p>
+                </div>
+
+            {% elif enquiry.status == 'contacted' %}
+
+                <div class="customer-next-icon">
+                    <i class="bi bi-chat-heart"></i>
+                </div>
+
+                <div>
+                    <span>NEXT STEP</span>
+
+                    <h2>
+                        Your trip is being discussed
+                    </h2>
+
+                    <p>
+                        Wanderwell has been in touch about your enquiry.
+                        Keep an eye on your contact details for the
+                        next steps.
+                    </p>
+                </div>
+
+            {% else %}
+
+                <div class="customer-next-icon">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+
+                <div>
+                    <span>TRIP STATUS</span>
+
+                    <h2>
+                        Your planning enquiry is complete
+                    </h2>
+
+                    <p>
+                        Your Wanderwell planning journey has been
+                        marked as completed.
+                    </p>
+                </div>
+
+            {% endif %}
+
+        </div>
+        
+
+
+        <div class="customer-enquiry-actions">
+
+            <a href="{% url 'planning' %}" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i>
+                Plan another trip
+            </a>
+
+            {% if site_settings.whatsapp_number %}
+
+                <a
+                    href="https://wa.me/{{ site_settings.whatsapp_number }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn btn-success"
+                >
+                    <i class="bi bi-whatsapp"></i>
+                    Contact Wanderwell
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
