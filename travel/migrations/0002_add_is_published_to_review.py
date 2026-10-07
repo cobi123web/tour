@@ -1,4 +1,4 @@
-from django.db import migrations, models
+from django.db import migrations
 
 
 class Migration(migrations.Migration):
@@ -7,13 +7,4 @@ class Migration(migrations.Migration):
         ("travel", "0001_initial"),
     ]
 
-    operations = [
-        migrations.AddField(
-            model_name="review",
-            name="is_published",
-            field=models.BooleanField(
-                default=True,
-                help_text="Uncheck to hide this review from the site without deleting it",
-            ),
-        ),
-    ]
+    operations = []
