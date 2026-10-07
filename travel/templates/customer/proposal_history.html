@@ -1,0 +1,183 @@
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}
+    Proposal History | Wanderwell
+{% endblock %}
+
+{% block content %}
+
+<section class="customer-proposal-history">
+
+    <div class="customer-proposal-history-header">
+
+        <span class="customer-proposal-history-eyebrow">
+            WANDERWELL
+        </span>
+
+        <h1>
+            Proposal History
+        </h1>
+
+        <p>
+            View the travel proposals prepared specifically for you.
+        </p>
+
+    </div>
+
+
+    {% if proposals %}
+
+        <div class="customer-proposal-history-list">
+
+            {% for proposal in proposals %}
+
+                <a
+                    href="{% url 'customer_proposal' proposal.id %}"
+                    class="customer-proposal-history-card {% if proposal.status == 'sent' %}proposal-unread{% endif %}"
+                >
+
+                    <div class="customer-proposal-history-icon">
+
+                        <i class="bi bi-file-earmark-text"></i>
+
+                    </div>
+
+
+                    <div class="customer-proposal-history-content">
+
+                        <div class="customer-proposal-history-top">
+
+                            <h2>
+                                {{ proposal.title }}
+                            </h2>
+
+
+                            {% if proposal.status == 'sent' %}
+
+                                <span class="proposal-unread-badge">
+                                    NEW
+                                </span>
+
+                            {% elif proposal.status == 'viewed' %}
+
+                                <span class="proposal-viewed-badge">
+                                    VIEWED
+                                </span>
+
+                            {% elif proposal.status == 'changes_requested' %}
+
+                                <span class="proposal-changes-badge">
+                                    CHANGES REQUESTED
+                                </span>
+
+                            {% elif proposal.status == 'accepted' %}
+
+                                <span class="proposal-accepted-badge">
+                                    ACCEPTED
+                                </span>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        {% if proposal.enquiry.destination %}
+
+                            <div class="customer-proposal-history-destination">
+
+                                <i class="bi bi-geo-alt"></i>
+
+                                {{ proposal.enquiry.destination }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if proposal.description %}
+
+                            <p class="customer-proposal-history-description">
+
+                                {{ proposal.description|truncatewords:25 }}
+
+                            </p>
+
+                        {% else %}
+
+                            <p class="customer-proposal-history-description">
+
+                                Your personalised travel proposal is ready to view.
+
+                            </p>
+
+                        {% endif %}
+
+
+                        <div class="customer-proposal-history-meta">
+
+                            <span class="customer-proposal-history-price">
+
+                                {{ proposal.currency }}
+                                {{ proposal.total_cost|floatformat:2 }}
+
+                            </span>
+
+
+                            <span class="customer-proposal-history-view">
+
+                                View Proposal
+
+                                <i class="bi bi-arrow-right"></i>
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            {% endfor %}
+
+        </div>
+
+
+    {% else %}
+
+        <div class="customer-proposal-history-empty">
+
+            <div class="customer-proposal-history-empty-icon">
+
+                <i class="bi bi-file-earmark-text"></i>
+
+            </div>
+
+
+            <h2>
+                No proposals yet
+            </h2>
+
+
+            <p>
+                When Wanderwell prepares a travel proposal for you,
+                it will appear here.
+            </p>
+
+
+            <a
+                href="{% url 'planning' %}"
+                class="customer-proposal-history-planning-btn"
+            >
+                Start Planning
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}

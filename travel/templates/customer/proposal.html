@@ -1,0 +1,353 @@
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ proposal.title }}{% endblock %}
+
+{% block content %}
+
+<div class="customer-proposal">
+
+    <!-- =====================================================
+         PROPOSAL HEADER
+         ===================================================== -->
+
+    <div class="customer-proposal-header">
+
+        <span class="eyebrow">
+            Travel Proposal
+        </span>
+
+        <h1>
+            {{ proposal.title }}
+        </h1>
+
+        <p>
+            Prepared for
+            <strong>{{ enquiry.name }}</strong>
+        </p>
+
+        
+
+        <span class="proposal-status">
+    {{ proposal.get_status_display }}
+</span>
+
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         PROPOSAL CONTENT
+         ===================================================== -->
+
+    <div class="proposal-content">
+
+
+        <!-- =================================================
+             TRIP DETAILS
+             ================================================= -->
+
+        <div class="proposal-trip-details">
+
+            <div class="trip-detail">
+                <span>Destination</span>
+                <strong>
+                    {{ enquiry.destination|default:"Not specified" }}
+                </strong>
+            </div>
+
+            <div class="trip-detail">
+                <span>Travel Dates</span>
+                <strong>
+                    {{ enquiry.travel_dates|default:"Flexible" }}
+                </strong>
+            </div>
+
+            <div class="trip-detail">
+                <span>Travellers</span>
+                <strong>
+                    {{ enquiry.travellers }}
+                </strong>
+            </div>
+
+            <div class="trip-detail">
+                <span>Travel Style</span>
+                <strong>
+                    {{ enquiry.get_travel_style_display }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             DESCRIPTION
+             ================================================= -->
+
+        {% if proposal.description %}
+
+        <section class="proposal-section">
+
+            <h2>
+                About Your Trip
+            </h2>
+
+            <p>
+                {{ proposal.description }}
+            </p>
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             ITINERARY
+             ================================================= -->
+
+        {% if proposal.itinerary %}
+
+        <section class="proposal-section">
+
+            <h2>
+                Your Itinerary
+            </h2>
+
+            <div class="proposal-itinerary">
+                {{ proposal.itinerary|linebreaks }}
+            </div>
+
+        </section>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             PRICING
+             ================================================= -->
+
+        <section class="proposal-section">
+
+            <h2>
+                Trip Pricing
+            </h2>
+
+            <div class="proposal-pricing">
+
+                <div class="pricing-row">
+                    <span>Flight</span>
+
+                    <strong>
+                        {{ proposal.currency }}
+                        {{ proposal.flight_cost|floatformat:2 }}
+                    </strong>
+                </div>
+
+
+                <div class="pricing-row">
+                    <span>Accommodation</span>
+
+                    <strong>
+                        {{ proposal.currency }}
+                        {{ proposal.accommodation_cost|floatformat:2 }}
+                    </strong>
+                </div>
+
+
+                <div class="pricing-row">
+                    <span>Transportation</span>
+
+                    <strong>
+                        {{ proposal.currency }}
+                        {{ proposal.transport_cost|floatformat:2 }}
+                    </strong>
+                </div>
+
+
+                <div class="pricing-row">
+                    <span>Activities</span>
+
+                    <strong>
+                        {{ proposal.currency }}
+                        {{ proposal.activities_cost|floatformat:2 }}
+                    </strong>
+                </div>
+
+
+                <div class="pricing-row">
+                    <span>Other Costs</span>
+
+                    <strong>
+                        {{ proposal.currency }}
+                        {{ proposal.other_cost|floatformat:2 }}
+                    </strong>
+                </div>
+
+
+                <div class="pricing-row">
+                    <span>Planning / Service Fee</span>
+
+                    <strong>
+                        {{ proposal.currency }}
+                        {{ proposal.service_fee|floatformat:2 }}
+                    </strong>
+                </div>
+
+
+                <div class="pricing-row pricing-total">
+
+                    <span>
+                        Total Trip Cost
+                    </span>
+
+                    <strong>
+                        {{ proposal.currency }}
+                        {{ proposal.total_cost|floatformat:2 }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             CUSTOMER ACTIONS
+             ================================================= -->
+
+        {% if proposal.status == 'sent' or proposal.status == 'viewed' %}
+
+        <div class="proposal-actions">
+
+
+            <!-- ACCEPT -->
+
+            <div class="proposal-action-card">
+
+                <h3>
+                    Ready to move forward?
+                </h3>
+
+                <p>
+                    If you're happy with this proposal,
+                    you can confirm your acceptance below.
+                </p>
+
+                <form
+                    method="post"
+                    action="{% url 'customer_proposal_accept' proposal.id %}"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="proposal-btn proposal-btn-primary"
+                    >
+                        Accept Proposal
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- REQUEST CHANGES -->
+
+            <div class="proposal-action-card">
+
+                <h3>
+                    Need some changes?
+                </h3>
+
+                <p>
+                    Tell us what you would like us to
+                    adjust before accepting the proposal.
+                </p>
+
+                <form
+                    method="post"
+                    action="{% url 'customer_proposal_request_changes' proposal.id %}"
+                    class="proposal-change-form"
+                >
+
+                    {% csrf_token %}
+
+                    <label for="customer_message">
+                        What would you like changed?
+                    </label>
+
+                    <textarea
+                        id="customer_message"
+                        name="customer_message"
+                        rows="5"
+                        maxlength="3000"
+                        placeholder="Tell us what you would like changed..."
+                        required
+                    ></textarea>
+
+                    <button
+                        type="submit"
+                        class="proposal-btn proposal-btn-secondary"
+                    >
+                        Request Changes
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             RESPONSE INFORMATION
+             ================================================= -->
+
+        {% if proposal.status == 'accepted' %}
+
+        <div class="proposal-message">
+
+            <strong>
+                Proposal Accepted
+            </strong>
+
+            <p>
+                Thank you. Your proposal has been accepted.
+                We will be in touch with the next steps.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+
+        {% if proposal.status == 'changes_requested' %}
+
+        <div class="proposal-message">
+
+            <strong>
+                Changes Requested
+            </strong>
+
+            <p>
+                Your requested changes have been received.
+                Our travel team will review them and update
+                your proposal.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
